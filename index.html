@@ -5,34 +5,272 @@
   <title>Secure Chat Room</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: sans-serif; background: #f3f3f3; margin: 0; padding: 0; }
-    #chat { width: 100%; max-width: 480px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 32px #0001; padding: 24px; }
-    #messages { height: 300px; overflow-y: auto; border: 1px solid #eee; padding: 12px; border-radius: 8px; background: #fafafa; margin-bottom: 18px; }
-    .msg { margin-bottom: 9px; }
-    #inputBar { display: flex; gap: 8px; }
-    #msgInput { flex: 1; font-size: 1em; padding: 10px; border-radius: 8px; border: 1px solid #ddd; }
-    #sendBtn { font-size: 1em; padding: 9px 18px; border-radius: 8px; border: none; background: #2ecc71; color: #fff; cursor: pointer; }
+    html, body {
+      height: 100%; min-height: 100%;
+      margin: 0; padding: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f3f3f3;
+      box-sizing: border-box;
+    }
+    body {
+      min-height: 100vh;
+      background: #f3f3f3 url('YOUR_LOGO.png') repeat center center;
+      background-size: 160px 160px;
+    }
+    #main {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    #topInfo {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-bottom: 120px;
+    }
+    #qrRow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 38px;
+      margin-bottom: 20px;
+    }
+    #qr {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 4px 36px #0002;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 220px;
+      min-height: 220px;
+      cursor: pointer;
+      transition: box-shadow 0.18s;
+    }
+    #qr:hover {
+      box-shadow: 0 8px 50px #2ecc7133;
+    }
+    #tipBox {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      background: rgba(255,255,255,0.92);
+      border-radius: 18px;
+      padding: 18px 20px;
+      font-size: 1.05em;
+      box-shadow: 0 2px 14px #2ecc7144;
+    }
+    #tipBox label {
+      color: #2ecc71;
+      font-weight: bold;
+      font-size: 1.11em;
+      margin-bottom: 5px;
+    }
+    #cashTag {
+      font-size: 1.19em;
+      color: #222;
+      font-weight: bold;
+      background: #e8ffe8;
+      border-radius: 9px;
+      padding: 4px 10px;
+      margin-bottom: 7px;
+    }
+    #shareLink {
+      font-size: 0.97em;
+      color: #888;
+      margin-top: 6px;
+      margin-bottom: 8px;
+      word-break: break-all;
+    }
+    #roomId {
+      font-family: monospace;
+      color: #2ecc71;
+      font-weight: bold;
+      letter-spacing: 2px;
+      font-size: 1.12em;
+      background: #fff;
+      border-radius: 8px;
+      padding: 3px 12px;
+      margin-left: 7px;
+    }
+    #chatBar {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 0 0 20px 0;
+      background: linear-gradient(to top, #f3f3f3 92%, #ffffff00 100%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #messages {
+      width: 100%;
+      max-width: 600px;
+      height: 90px;
+      overflow-y: auto;
+      border-radius: 10px 10px 0 0;
+      background: #fff;
+      padding: 10px 14px 4px 14px;
+      box-shadow: 0 1px 8px #2ecc710c;
+      font-size: 1em;
+      margin-bottom: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .msg {
+      margin-bottom: 6px;
+      word-break: break-word;
+      color: #333;
+    }
+    .me {
+      color: #2ecc71;
+      font-weight: bold;
+    }
+    #inputBar {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      background: #fff;
+      border-radius: 0 0 14px 14px;
+      box-shadow: 0 4px 16px #2ecc7109;
+      padding: 6px 8px;
+      border-top: 1px solid #eee;
+      gap: 8px;
+    }
+    #msgInput {
+      flex: 1;
+      font-size: 1.05em;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      outline: none;
+      background: #f7f7f7;
+    }
+    #sendBtn {
+      font-size: 1.04em;
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: none;
+      background: #2ecc71;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+    }
     #sendBtn:hover { background: #1e9f4d; }
-    #roomBar { margin-bottom: 14px; }
-    #roomId { font-family: monospace; color: #2ecc71; font-weight: bold; letter-spacing: 2px; }
-    #newRoomBtn { margin-left: 12px; font-size: 0.93em; }
-    #qr { margin: 15px 0; }
-    #qr canvas { margin: 0 auto; display: block; }
-    #shareLink { font-size: 0.97em; color: #888; margin-bottom: 8px; word-break: break-all; }
+    #newRoomBtn {
+      margin-left: 18px;
+      font-size: 1em;
+      background: #2ecc71;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 1px 7px #2ecc710c;
+    }
+    #newRoomBtn:hover { background: #1e9f4d; }
+
+    /* Fullscreen QR overlay */
+    #qrOverlay {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(243,243,243,0.97);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      animation: fadeIn 0.17s;
+    }
+    #qrOverlay.visible { display: flex; }
+    #qrOverlayContent {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      flex-wrap: wrap;
+    }
+    #qrOverlay .largeQR {
+      background: #fff;
+      border-radius: 28px;
+      box-shadow: 0 6px 40px #2ecc7130;
+      padding: 36px;
+      min-width: 320px;
+      min-height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #qrOverlay .closeBtn {
+      position: absolute;
+      top: 28px;
+      right: 38px;
+      font-size: 2.1em;
+      background: none;
+      border: none;
+      color: #888;
+      cursor: pointer;
+      z-index: 10000;
+      transition: color 0.17s;
+    }
+    #qrOverlay .closeBtn:hover { color: #2ecc71; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    @media (max-width: 900px) {
+      #qrRow, #qrOverlayContent { flex-direction: column; gap: 18px; }
+      #qr, #qrOverlay .largeQR { min-width: 0; min-height: 0; }
+      #tipBox { min-width: 160px; }
+    }
   </style>
 </head>
 <body>
-  <div id="chat">
-    <div id="roomBar">
-      Room: <span id="roomId"></span>
-      <button id="newRoomBtn">New Room</button>
+  <div id="main">
+    <div id="topInfo">
+      <div class="roomTitle">
+        Room: <span id="roomId"></span>
+        <button id="newRoomBtn" title="Start a new chat room">New Room</button>
+      </div>
+      <div id="qrRow">
+        <div id="qr" title="Tap to enlarge QR"></div>
+        <div id="tipBox">
+          <label>Tip the creator 💚</label>
+          <div id="cashTag">$YOURCASHAPP</div>
+          <span style="font-size:0.97em;color:#888;">Thank you for supporting!</span>
+        </div>
+      </div>
+      <div id="shareLink"></div>
     </div>
-    <div id="qr"></div>
-    <div id="shareLink"></div>
-    <div id="messages"></div>
-    <div id="inputBar">
-      <input type="text" id="msgInput" placeholder="Type message...">
-      <button id="sendBtn">Send</button>
+    <div id="chatBar">
+      <div id="messages"></div>
+      <div id="inputBar">
+        <input type="text" id="msgInput" placeholder="Type message..." autocomplete="off">
+        <button id="sendBtn">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- QR ENLARGE OVERLAY -->
+  <div id="qrOverlay">
+    <button class="closeBtn" aria-label="Close">&times;</button>
+    <div id="qrOverlayContent">
+      <div class="largeQR" id="largeQR"></div>
+      <div id="largeTipBox">
+        <label style="color:#2ecc71;font-weight:bold;font-size:1.11em;margin-bottom:5px;">Tip the creator 💚</label>
+        <div style="font-size:1.19em;color:#222;font-weight:bold;background:#e8ffe8;border-radius:9px;padding:4px 10px;margin-bottom:7px;">
+          $YOURCASHAPP
+        </div>
+        <span style="font-size:0.97em;color:#888;">Thank you for supporting!</span>
+      </div>
     </div>
   </div>
 
@@ -71,30 +309,90 @@
       window.history.replaceState({}, '', '?room=' + room);
     }
 
-    // 3. State
+    // 3. Color name pool
+    const colorNames = [
+      "Green", "Red", "Blue", "Orange", "Purple", "Yellow", "Pink", "Brown",
+      "White", "Black", "Cyan", "Magenta", "Teal", "Indigo", "Lime", "Violet"
+    ];
+
+    // 4. Assign user a persistent random color name per room (stored in sessionStorage)
+    async function assignUserName(room) {
+      const key = 'colorName_' + room;
+      if (sessionStorage.getItem(key)) return sessionStorage.getItem(key);
+
+      // Get used color names in this room
+      const snap = await db.ref('chatrooms/' + room + '/users').once('value');
+      const used = new Set();
+      snap.forEach(child => used.add(child.val().color));
+      // Choose an unused color, or random if all are taken
+      let available = colorNames.filter(c => !used.has(c));
+      if (available.length === 0) available = colorNames;
+      const color = available[Math.floor(Math.random() * available.length)];
+      const name = `Mr ${color}`;
+      sessionStorage.setItem(key, name);
+      // Register in users list
+      db.ref('chatrooms/' + room + '/users').push({ color: color, joined: Date.now() });
+      return name;
+    }
+
+    // 5. State
     let room = getRoomFromUrl() || randomRoom();
     setRoomInUrl(room);
-
-    // 4. Display room code and QR
     document.getElementById('roomId').textContent = room;
+
+    // 6. Assign user name
+    let myName = null;
+    assignUserName(room).then(name => { myName = name; });
+
+    // 7. Display QR and link (as before)
+    let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
     function updateQRandLink() {
       document.getElementById('qr').innerHTML = "";
-      const joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
+      joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
       new QRCode(document.getElementById('qr'), {
         text: joinUrl,
-        width: 180,
-        height: 180
+        width: 220,
+        height: 220
       });
       document.getElementById('shareLink').textContent = "Share this link: " + joinUrl;
     }
     updateQRandLink();
 
-    // 5. Listen for new messages
+    // 8. Enlarge QR on click
+    document.getElementById('qr').addEventListener('click', function() {
+      // Show overlay
+      document.getElementById('qrOverlay').classList.add('visible');
+      // Generate big QR
+      document.getElementById('largeQR').innerHTML = "";
+      new QRCode(document.getElementById('largeQR'), {
+        text: joinUrl,
+        width: 350,
+        height: 350
+      });
+    });
+    // Close overlay on X or click outside
+    document.querySelector('#qrOverlay .closeBtn').onclick = function() {
+      document.getElementById('qrOverlay').classList.remove('visible');
+      document.getElementById('largeQR').innerHTML = "";
+    };
+    // Also close if clicking outside content (mobile)
+    document.getElementById('qrOverlay').addEventListener('click', function(e) {
+      if (e.target === this) {
+        document.getElementById('qrOverlay').classList.remove('visible');
+        document.getElementById('largeQR').innerHTML = "";
+      }
+    });
+
+    // 9. Listen for new messages
     const messagesDiv = document.getElementById('messages');
     function addMsg(text, sender) {
       const div = document.createElement('div');
       div.className = 'msg';
-      div.textContent = (sender ? (sender + ': ') : '') + text;
+      if (sender === myName) {
+        div.innerHTML = `<span class="me">${sender}:</span> ${text}`;
+      } else {
+        div.textContent = (sender ? (sender + ': ') : '') + text;
+      }
       messagesDiv.appendChild(div);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
@@ -104,14 +402,14 @@
       addMsg(msg.text, msg.sender);
     });
 
-    // 6. Send new message
+    // 10. Send new message
     const msgInput = document.getElementById('msgInput');
     function sendMsg() {
       const text = msgInput.value.trim();
-      if (!text) return;
+      if (!text || !myName) return;
       db.ref('chatrooms/' + room + '/messages').push({
         text: text,
-        sender: 'Anon'
+        sender: myName
       });
       msgInput.value = '';
     }
@@ -120,10 +418,12 @@
       if (e.key === 'Enter') sendMsg();
     });
 
-    // 7. New room button
+    // 11. New room button
     document.getElementById('newRoomBtn').onclick = function() {
       // Remove old listener
       msgListenerRef.off();
+      // Remove user color from session for old room:
+      sessionStorage.removeItem('colorName_' + room);
       room = randomRoom();
       setRoomInUrl(room);
       document.getElementById('roomId').textContent = room;
@@ -135,7 +435,13 @@
         const msg = snap.val();
         addMsg(msg.text, msg.sender);
       });
+      // Assign new color name for new room
+      assignUserName(room).then(name => { myName = name; });
     };
+
+    // 12. Insert your Cash App tag
+    document.getElementById('cashTag').textContent = '$YOURCASHAPP';
+    document.querySelector('#largeTipBox div').textContent = '$YOURCASHAPP';
   </script>
 </body>
 </html>
