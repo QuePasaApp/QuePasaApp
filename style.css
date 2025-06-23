@@ -1,0 +1,35 @@
+/* Shared CSS for QuePasaApp */
+
+/* Splash Screen */
+body.splash {
+  background: #2ecc71;
+  margin: 0;
+  min-height: 100vh;
+  min-width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.center-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.splash-logo {
+  width: 220px;
+  height: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  border-radius: 24px;
+}
+
+/* Placeholder for future pages */
+body {
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.hide {
+  display: none !important;
+}
