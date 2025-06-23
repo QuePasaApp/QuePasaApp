@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QuePasaApp Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="chat-page">
+  <!-- Exit Button (top right) -->
+  <button class="exit-btn" id="exitBtn" title="Leave Chat">✖</button>
+
+  <!-- Header (Room Info & QR) -->
+  <div class="chat-header">
+    <div>
+      <span class="room-label">Room:</span>
+      <span id="roomCode" class="room-code">------</span>
+    </div>
+    <div id="qrContainer"></div>
+  </div>
+
+  <!-- Flash Mode and Theme Buttons -->
+  <div class="chat-controls">
+    <button id="flashBtn" class="flash-btn">⚡ Flash Mode</button>
+    <button id="themeBtn" class="theme-btn">🌀 Theme</button>
+  </div>
+
+  <!-- Chat Messages Area -->
+  <div id="chatArea" class="chat-area">
+    <!-- Messages will be appended here -->
+  </div>
+
+  <!-- Message Input -->
+  <div class="input-bar">
+    <input type="text" id="messageInput" placeholder="Type your message..." maxlength="250" autocomplete="off">
+  </div>
+
+  <!-- Flash Overlay (for Flash Mode animation) -->
+  <div class="flash-overlay hide" id="flashOverlay"></div>
+
+  <!-- QR code library -->
+  <script src="qrcode.min.js"></script>
+  <!-- Shared JS and Chat JS -->
+  <script src="app.js"></script>
+  <script src="chat.js"></script>
+</body>
+</html>
