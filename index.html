@@ -13,12 +13,12 @@
       min-height: 100vh;
     }
     .center-box {
-      max-width: 1100px;
-      margin: 32px auto 0 auto;
+      max-width: 2600px;
+      margin: 60px auto 0 auto;
       background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 8px 32px #0001;
-      padding: 20px 10px 10px 10px;
+      border-radius: 60px;
+      box-shadow: 0 16px 64px #0002;
+      padding: 80px 30px 40px 30px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -29,9 +29,9 @@
       flex-direction: row;
       justify-content: center;
       align-items: center;
-      gap: 18px;
+      gap: 90px;
       width: 100%;
-      margin-bottom: 20px;
+      margin-bottom: 60px;
     }
     .qr-col, .logo-col, .cashapp-col {
       display: flex;
@@ -41,14 +41,14 @@
       min-width: 0;
     }
     .qr-img, .logo-img, .cashapp-img {
-      width: 110px;
-      height: 110px;
+      width: 420px;
+      height: 420px;
       object-fit: contain;
-      border-radius: 16px;
+      border-radius: 50px;
       background: #f8f8f8;
-      border: 2px solid #eee;
-      box-shadow: 0 2px 8px #2221;
-      margin-bottom: 5px;
+      border: 5px solid #eee;
+      box-shadow: 0 6px 36px #2222;
+      margin-bottom: 18px;
       transition: box-shadow .2s, transform .2s;
       cursor: pointer;
       display: block;
@@ -57,82 +57,83 @@
     }
     .cashapp-img {
       background: #222;
-      border: 2px solid #2ecc71;
+      border: 5px solid #2ecc71;
     }
     .img-label {
-      font-size: 0.98em;
+      font-size: 2.7em;
       color: #888;
       text-align: center;
+      margin-top: 12px;
     }
     .interactive-img.enlarged {
       position: fixed !important;
       z-index: 1111;
       left: 50% !important;
       top: 50% !important;
-      transform: translate(-50%,-50%) scale(1.7) !important;
-      width: 90vw !important;
-      height: 90vw !important;
+      transform: translate(-50%,-50%) scale(1.3) !important;
+      width: 85vw !important;
+      height: 85vw !important;
       max-width: 98vw !important;
       max-height: 95vh !important;
       background: #fff;
-      box-shadow: 0 0 0 3000px #0009, 0 6px 48px #111a;
-      border: 3px solid #2ecc71;
+      box-shadow: 0 0 0 3000px #000b, 0 6px 48px #111a;
+      border: 6px solid #2ecc71;
     }
     .room-title {
-      margin-bottom: 14px;
-      font-size: 1.25em;
-      font-weight: 700;
+      margin-bottom: 32px;
+      font-size: 4.1em;
+      font-weight: 800;
       color: #111;
       text-align: center;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 7px;
+      gap: 18px;
       justify-content: center;
     }
     .room-id {
       color: #2ecc71;
       font-family: monospace;
-      font-size: 1em;
-      margin-left: 2px;
+      font-size: 1.5em;
+      margin-left: 4px;
       word-break: break-all;
     }
     .new-room-btn, .clear-chat-btn {
-      font-size: 1em;
+      font-size: 2.3em;
       background: #2ecc71;
       color: #fff;
       border: none;
-      border-radius: 11px;
-      padding: 7px 16px;
+      border-radius: 30px;
+      padding: 20px 70px;
       font-weight: bold;
       cursor: pointer;
-      margin-left: 4px;
+      margin-left: 12px;
       transition: background 0.2s;
     }
     .new-room-btn:hover { background: #1e9f4d; }
     .clear-chat-btn {
       background: #e74c3c;
-      margin-left: 4px;
+      margin-left: 12px;
     }
     .clear-chat-btn:hover {
       background: #c0392b;
     }
     .msg-area {
       width: 100%;
-      min-height: 100px;
+      min-height: 500px;
       background: #fafafa;
-      border: 2px solid #eee;
-      border-radius: 13px;
-      margin-bottom: 10px;
-      padding: 11px 7px 6px 7px;
+      border: 4px solid #eee;
+      border-radius: 40px;
+      margin-bottom: 32px;
+      padding: 56px 24px 22px 32px;
       overflow-y: auto;
-      font-size: 1em;
-      max-height: 210px;
+      font-size: 3.3em;
+      max-height: 900px;
       word-break: break-word;
       box-sizing: border-box;
     }
     .msg {
-      margin-bottom: 11px;
+      margin-bottom: 38px;
       word-break: break-word;
     }
     .sender {
@@ -145,22 +146,22 @@
     .input-row {
       display: flex;
       width: 100%;
-      gap: 7px;
-      margin-bottom: 2px;
+      gap: 32px;
+      margin-bottom: 10px;
     }
     #msgInput {
       flex: 1;
-      font-size: 1em;
-      padding: 7px;
-      border-radius: 8px;
-      border: 2px solid #ddd;
+      font-size: 2.7em;
+      padding: 36px;
+      border-radius: 24px;
+      border: 4px solid #ddd;
       outline: none;
       background: #f7f7f7;
     }
     #sendBtn {
-      font-size: 1em;
-      padding: 7px 14px;
-      border-radius: 8px;
+      font-size: 2.4em;
+      padding: 32px 90px;
+      border-radius: 24px;
       border: none;
       background: #2ecc71;
       color: #fff;
@@ -168,24 +169,23 @@
       font-weight: bold;
     }
     #sendBtn:hover { background: #1e9f4d; }
-    /* Help (How to use) icon and tooltip */
     .help-icon {
       position: absolute;
-      top: 8px;
-      right: 8px;
+      top: 32px;
+      right: 32px;
       background: #fff;
       border-radius: 50%;
-      width: 25px;
-      height: 25px;
-      font-size: 1em;
+      width: 64px;
+      height: 64px;
+      font-size: 2.1em;
       color: #2ecc71;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 6px #0002;
+      box-shadow: 0 2px 18px #0002;
       cursor: pointer;
       z-index: 20;
-      border: 2px solid #2ecc71;
+      border: 5px solid #2ecc71;
       transition: background 0.18s, color 0.18s;
     }
     .help-icon:active,
@@ -193,58 +193,62 @@
     .help-icon:hover { background: #2ecc71; color: #fff; outline: none;}
     .help-tooltip {
       position: fixed;
-      top: 32px;
-      right: 7px;
-      width: 220px;
-      max-width: 96vw;
+      top: 120px;
+      right: 40px;
+      width: 590px;
+      max-width: 98vw;
       background: #fff;
       color: #222;
-      font-size: 0.95em;
-      border-radius: 9px;
-      box-shadow: 0 6px 32px #2223;
-      padding: 11px 8px 7px 8px;
+      font-size: 2.1em;
+      border-radius: 30px;
+      box-shadow: 0 16px 48px #2224;
+      padding: 40px 38px 32px 38px;
       z-index: 99;
       display: none;
-      animation: fadeInHelp 0.18s;
+      animation: fadeInHelp 0.24s;
       line-height: 1.5;
     }
     @keyframes fadeInHelp {
-      from { opacity: 0; transform: translateY(-11px);}
+      from { opacity: 0; transform: translateY(-21px);}
       to { opacity: 1; transform: translateY(0);}
     }
     .help-tooltip ul {
-      padding-left: 19px;
-      margin: 4px 0 0 0;
+      padding-left: 40px;
+      margin: 12px 0 0 0;
     }
     .close-tooltip {
       position: absolute;
-      top: 4px;
-      right: 8px;
+      top: 18px;
+      right: 30px;
       color: #e74c3c;
-      font-size: 1.12em;
+      font-size: 2.1em;
       cursor: pointer;
       font-weight: bold;
       transition: color .17s;
     }
     .close-tooltip:hover { color: #c0392b; }
-    @media (max-width: 700px) {
-      .center-box { max-width: 99vw; padding: 2vw 2vw 2vw 2vw; border-radius: 8px; }
-      .top-row { flex-direction: column; gap: 8px; }
-      .qr-col, .logo-col, .cashapp-col { width: 100%; }
-      .qr-img, .logo-img, .cashapp-img {
-        width: 60vw;
-        height: 60vw;
-        min-width: 50px; min-height: 50px;
-        max-width: 88vw; max-height: 88vw;
-      }
-      .room-title { font-size: 1em; }
-      .room-id { font-size: 1em; }
-      .msg-area { font-size: 1em; min-height: 50px; max-height: 110px; padding: 6px 2vw 4px 2vw; }
-      #msgInput { font-size: 1em; padding: 2vw; }
-      #sendBtn { font-size: 1em; padding: 2vw 5vw; }
-      .new-room-btn, .clear-chat-btn { font-size: 0.92em; padding: 6px 9px; }
-      .help-tooltip { top: 25px; right: 3px; font-size: .93em; padding:7px 3px 5px 5px; width: 96vw; max-width: 97vw;}
-      .help-icon { width: 19px; height: 19px; font-size: .75em; top: 4px; right: 4px;}
+    @media (max-width: 1500px) {
+      .center-box { max-width: 98vw; }
+      .qr-img, .logo-img, .cashapp-img { width: 35vw; height: 35vw; min-width: 200px; min-height: 200px; max-width: 90vw; max-height: 90vw;}
+      .help-tooltip { width: 96vw; max-width: 97vw; font-size: 1.6em; padding: 22px 7vw 18px 7vw;}
+      .help-icon { width: 46px; height: 46px; font-size: 1.3em; top: 18px; right: 18px;}
+    }
+    @media (max-width: 900px) {
+      .top-row { flex-direction: column; gap: 40px; }
+      .qr-img, .logo-img, .cashapp-img { width: 92vw; height: 92vw; min-width: 120px; min-height: 120px; max-width: 95vw; max-height: 95vw;}
+      .help-tooltip { top: 13vw; right: 2vw; font-size: 1.1em; padding: 11vw 3vw 8vw 3vw;}
+      .help-icon { width: 36px; height: 36px; font-size: 1em; top: 4vw; right: 2vw;}
+      .center-box { padding: 3vw 1vw 2vw 1vw; border-radius: 16px;}
+      .msg-area { font-size: 1.6em; min-height: 200px; max-height: 320px; padding: 6vw 3vw 4vw 3vw; border-radius: 14px;}
+      .room-title { font-size: 2em;}
+      .img-label { font-size: 1.2em;}
+      #msgInput { font-size: 1.3em; padding: 3vw; border-radius: 10px;}
+      #sendBtn { font-size: 1.2em; padding: 3vw 5vw; border-radius: 10px;}
+      .new-room-btn, .clear-chat-btn { font-size: 1.2em; padding: 1.4vw 6vw; border-radius: 12px;}
+    }
+    @media (max-width: 600px) {
+      .qr-img, .logo-img, .cashapp-img { min-width: 80px; min-height: 80px; }
+      .msg-area { font-size: 1em; min-height: 50px; max-height: 110px; padding: 2vw 2vw 2vw 2vw;}
     }
   </style>
 </head>
@@ -309,7 +313,6 @@
     firebase.initializeApp(firebaseConfig);
     var db = firebase.database();
 
-    // Room utilities
     function randomRoom() {
       let arr = new Uint32Array(4);
       window.crypto.getRandomValues(arr);
@@ -322,8 +325,6 @@
     function setRoomInUrl(room) {
       window.history.replaceState({}, '', '?room=' + room);
     }
-
-    // Assign name per room
     function assignName(room) {
       const colors = [
         "White", "Black", "Green", "Red", "Blue", "Orange", "Purple", "Yellow", "Pink", "Brown",
@@ -336,8 +337,6 @@
       sessionStorage.setItem(key, name);
       return name;
     }
-
-    // Color mapping
     const colorStyles = {
       White: "#eaeaea",
       Black: "#222",
@@ -356,19 +355,17 @@
       Lime: "#cddc39",
       Violet: "#8e24aa"
     };
-
-    // Setup
     let room = getRoomFromUrl() || randomRoom();
     setRoomInUrl(room);
     document.getElementById('roomId').textContent = room;
     let myName = assignName(room);
 
-    // Responsive QR
     function renderQR() {
       let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
-      let qrSize = 110;
-      if (window.innerWidth < 700) qrSize = Math.floor(window.innerWidth * 0.6);
-      if (window.innerWidth < 400) qrSize = Math.floor(window.innerWidth * 0.8);
+      let qrSize = 420;
+      if (window.innerWidth < 1500) qrSize = Math.floor(window.innerWidth * 0.35);
+      if (window.innerWidth < 900) qrSize = Math.floor(window.innerWidth * 0.92);
+      if (qrSize < 80) qrSize = 80;
       document.getElementById('qr').innerHTML = "";
       new QRCode(document.getElementById('qr'), {
         text: joinUrl,
@@ -379,7 +376,6 @@
     renderQR();
     window.addEventListener('resize', renderQR);
 
-    // Messages logic
     const messagesDiv = document.getElementById('messages');
     function addMsg(text, sender) {
       const div = document.createElement('div');
@@ -398,7 +394,6 @@
       addMsg(msg.text, msg.sender);
     });
 
-    // Send message
     const msgInput = document.getElementById('msgInput');
     function sendMsg() {
       const text = msgInput.value.trim();
@@ -414,7 +409,6 @@
       if (e.key === 'Enter') sendMsg();
     });
 
-    // New room button
     document.getElementById('newRoomBtn').onclick = function() {
       msgListenerRef.off();
       sessionStorage.removeItem('colorName_' + room);
@@ -431,7 +425,6 @@
       myName = assignName(room);
     };
 
-    // Clear chat button logic
     document.getElementById('clearChatBtn').onclick = function() {
       if (confirm("Are you sure you want to clear the chat for everyone in this room? This cannot be undone.")) {
         db.ref('chatrooms/' + room + '/messages').remove();
@@ -439,7 +432,6 @@
       }
     };
 
-    // --- Interactive enlarge for QR and Logo ---
     function setupInteractiveEnlarge(id) {
       const el = document.getElementById(id);
       let lastTapTime = 0;
@@ -467,14 +459,13 @@
     setupInteractiveEnlarge('qr');
     setupInteractiveEnlarge('mainLogo');
 
-    // --- Help tooltip logic ---
     const helpIcon = document.getElementById('helpIcon');
     const helpTooltip = document.getElementById('helpTooltip');
     const closeTooltipBtn = document.getElementById('closeTooltipBtn');
     function showTooltip() { helpTooltip.style.display = 'block'; }
     function hideTooltip() { helpTooltip.style.display = 'none'; }
     function isMobile() {
-      return window.innerWidth <= 700 || 'ontouchstart' in window;
+      return window.innerWidth <= 900 || 'ontouchstart' in window;
     }
     helpIcon.addEventListener('mouseenter', () => { if (!isMobile()) showTooltip(); });
     helpIcon.addEventListener('mouseleave', () => { if (!isMobile()) hideTooltip(); });
