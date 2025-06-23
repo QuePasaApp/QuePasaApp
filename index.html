@@ -129,6 +129,40 @@
       font-size: 1.6em;
       max-height: 500px;
     }
+    .alone-message {
+      color: #e74c3c;
+      background: #fff4f4;
+      border: 2px solid #e74c3c;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 1.25em;
+      margin: 14px auto 8px auto;
+      padding: 18px 10px;
+      max-width: 520px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .alone-message .new-room-btn {
+      margin-left: 0;
+      margin-top: 12px;
+      font-size: 1.1em;
+      padding: 7px 30px;
+      background: #2ecc71;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .alone-message .new-room-btn:hover {
+      background: #1e9f4d;
+    }
     .msg {
       margin-bottom: 18px;
       word-break: break-word;
@@ -209,6 +243,7 @@
       #sendBtn { font-size: 1.1em; padding: 2vw 6vw; }
       .new-room-btn { font-size: 0.97em; padding: 7px 16px; }
       .bottom-link { font-size: 1.1em; }
+      .alone-message { font-size: 1em; padding: 10px 4px; }
     }
     @media (max-width: 500px) {
       .center-box { padding: 6vw 1vw 4vw 1vw; }
@@ -243,6 +278,7 @@
       <button class="new-room-btn" id="newRoomBtn">New Room</button>
     </div>
     <div class="msg-area" id="messages"></div>
+    <div id="aloneContainer"></div>
     <div class="input-row">
       <input type="text" id="msgInput" placeholder="Type message..." autocomplete="off">
       <button id="sendBtn">Send</button>
@@ -255,7 +291,6 @@
   <!-- QR Code JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    // Firebase config (from your setup)
     var firebaseConfig = {
       apiKey: "AIzaSyDj9I6Rt64jHqA0AhhVQtHDshz5v03s3x8",
       authDomain: "quepasaapp-8c246.firebaseapp.com",
@@ -267,7 +302,8 @@
     firebase.initializeApp(firebaseConfig);
     var db = firebase.database();
 
-    // Room utilities
+    // --- User presence logic ---
+    let room, myId, myName, msgListenerRef, presenceRef, presenceListener;
     function randomRoom() {
       let arr = new Uint32Array(4);
       window.crypto.getRandomValues(arr);
@@ -280,8 +316,6 @@
     function setRoomInUrl(room) {
       window.history.replaceState({}, '', '?room=' + room);
     }
-
-    // Assign name per room
     function assignName(room) {
       const colors = [
         "White", "Black", "Green", "Red", "Blue", "Orange", "Purple", "Yellow", "Pink", "Brown",
@@ -294,38 +328,51 @@
       sessionStorage.setItem(key, name);
       return name;
     }
-
-    // Color mapping
     const colorStyles = {
-      White: "#eaeaea",
-      Black: "#222",
-      Green: "#2ecc71",
-      Red: "#e74c3c",
-      Blue: "#3498db",
-      Orange: "#e67e22",
-      Purple: "#9b59b6",
-      Yellow: "#f1c40f",
-      Pink: "#ff69b4",
-      Brown: "#a0522d",
-      Cyan: "#1abc9c",
-      Magenta: "#e040fb",
-      Teal: "#008080",
-      Indigo: "#3f51b5",
-      Lime: "#cddc39",
-      Violet: "#8e24aa"
+      White: "#eaeaea", Black: "#222", Green: "#2ecc71", Red: "#e74c3c", Blue: "#3498db",
+      Orange: "#e67e22", Purple: "#9b59b6", Yellow: "#f1c40f", Pink: "#ff69b4", Brown: "#a0522d",
+      Cyan: "#1abc9c", Magenta: "#e040fb", Teal: "#008080", Indigo: "#3f51b5", Lime: "#cddc39", Violet: "#8e24aa"
     };
 
-    // Setup
-    let room = getRoomFromUrl() || randomRoom();
-    setRoomInUrl(room);
-    document.getElementById('roomId').textContent = room;
-    let myName = assignName(room);
+    function setupRoom(newRoom) {
+      // --- CLEANUP old listeners ---
+      if (msgListenerRef) msgListenerRef.off();
+      if (presenceRef) {
+        if (presenceListener) presenceRef.off('value', presenceListener);
+        if (myId) presenceRef.child(myId).remove();
+      }
+      sessionStorage.removeItem('colorName_' + (room || ''));
+      // --- SETUP new room ---
+      room = newRoom;
+      setRoomInUrl(room);
+      document.getElementById('roomId').textContent = room;
+      document.getElementById('messages').innerHTML = "";
+      document.getElementById('aloneContainer').innerHTML = "";
+      renderQR();
+      myName = assignName(room);
+      myId = (Math.random().toString(36)+Date.now().toString(36));
+      // User presence
+      presenceRef = db.ref('chatrooms/' + room + '/presence');
+      presenceRef.child(myId).set({name: myName, ts: firebase.database.ServerValue.TIMESTAMP});
+      presenceRef.child(myId).onDisconnect().remove(); // Remove self on disconnect
+      // Listen for presence changes
+      presenceListener = function(snapshot) {
+        const presence = snapshot.val() || {};
+        const others = Object.keys(presence).filter(k => k !== myId);
+        showAloneUI(others.length === 0);
+      };
+      presenceRef.on('value', presenceListener);
+      // Listen for messages
+      msgListenerRef = db.ref('chatrooms/' + room + '/messages');
+      msgListenerRef.on('child_added', snap => {
+        const msg = snap.val();
+        addMsg(msg.text, msg.sender);
+      });
+    }
 
-    // QR for join URL
     function renderQR() {
       let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
       document.getElementById('qr').innerHTML = "";
-      // Responsively set QR size
       let qrSize = 400;
       if (window.innerWidth < 600) qrSize = Math.floor(window.innerWidth * 0.72);
       new QRCode(document.getElementById('qr'), {
@@ -334,10 +381,8 @@
         height: qrSize
       });
     }
-    renderQR();
     window.addEventListener('resize', renderQR);
 
-    // Messages logic
     const messagesDiv = document.getElementById('messages');
     function addMsg(text, sender) {
       const div = document.createElement('div');
@@ -350,11 +395,28 @@
       messagesDiv.appendChild(div);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
-    let msgListenerRef = db.ref('chatrooms/' + room + '/messages');
-    msgListenerRef.on('child_added', snap => {
-      const msg = snap.val();
-      addMsg(msg.text, msg.sender);
-    });
+
+    // Show/hide "You're alone" UI
+    function showAloneUI(isAlone) {
+      const container = document.getElementById('aloneContainer');
+      container.innerHTML = "";
+      if (isAlone) {
+        const aloneDiv = document.createElement('div');
+        aloneDiv.className = 'alone-message';
+        aloneDiv.innerHTML = `You're alone. Create new room.<br>`;
+        const btn = document.createElement('button');
+        btn.className = 'new-room-btn';
+        btn.innerText = 'Create New Room';
+        btn.onclick = function() {
+          setupRoom(randomRoom());
+        };
+        aloneDiv.appendChild(btn);
+        container.appendChild(aloneDiv);
+      }
+    }
+
+    // --- Initial room setup ---
+    setupRoom(getRoomFromUrl() || randomRoom());
 
     // Send message
     const msgInput = document.getElementById('msgInput');
@@ -374,36 +436,12 @@
 
     // New room button
     document.getElementById('newRoomBtn').onclick = function() {
-      msgListenerRef.off();
-      sessionStorage.removeItem('colorName_' + room);
-      room = randomRoom();
-      setRoomInUrl(room);
-      document.getElementById('roomId').textContent = room;
-      document.getElementById('messages').innerHTML = "";
-      renderQR();
-      msgListenerRef = db.ref('chatrooms/' + room + '/messages');
-      msgListenerRef.on('child_added', snap => {
-        const msg = snap.val();
-        addMsg(msg.text, msg.sender);
-      });
-      myName = assignName(room);
+      setupRoom(randomRoom());
     };
 
     // Leave (big red X) button logic
     document.getElementById('leaveBtn').onclick = function() {
-      msgListenerRef.off();
-      sessionStorage.removeItem('colorName_' + room);
-      room = randomRoom();
-      setRoomInUrl(room);
-      document.getElementById('roomId').textContent = room;
-      document.getElementById('messages').innerHTML = "";
-      renderQR();
-      msgListenerRef = db.ref('chatrooms/' + room + '/messages');
-      msgListenerRef.on('child_added', snap => {
-        const msg = snap.val();
-        addMsg(msg.text, msg.sender);
-      });
-      myName = assignName(room);
+      setupRoom(randomRoom());
     };
   </script>
 </body>
