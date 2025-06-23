@@ -2,24 +2,140 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>QuePasaApp</title>
+  <title>Secure Chat Room</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <!-- Favicon optional: <link rel="icon" href="QuePasaLogo.png" /> -->
+  <style>
+    body { font-family: sans-serif; background: #f3f3f3; margin: 0; padding: 0; }
+    #chat { width: 100%; max-width: 480px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 32px #0001; padding: 24px; }
+    #messages { height: 300px; overflow-y: auto; border: 1px solid #eee; padding: 12px; border-radius: 8px; background: #fafafa; margin-bottom: 18px; }
+    .msg { margin-bottom: 9px; }
+    #inputBar { display: flex; gap: 8px; }
+    #msgInput { flex: 1; font-size: 1em; padding: 10px; border-radius: 8px; border: 1px solid #ddd; }
+    #sendBtn { font-size: 1em; padding: 9px 18px; border-radius: 8px; border: none; background: #2ecc71; color: #fff; cursor: pointer; }
+    #sendBtn:hover { background: #1e9f4d; }
+    #roomBar { margin-bottom: 14px; }
+    #roomId { font-family: monospace; color: #2ecc71; font-weight: bold; letter-spacing: 2px; }
+    #newRoomBtn { margin-left: 12px; font-size: 0.93em; }
+    #qr { margin: 15px 0; }
+    #qr canvas { margin: 0 auto; display: block; }
+    #shareLink { font-size: 0.97em; color: #888; margin-bottom: 8px; word-break: break-all; }
+  </style>
 </head>
-<body class="splash">
-  <div class="center-container" id="splash-main">
-    <img src="QuePasaLogo.png" alt="QuePasaApp Logo" class="splash-logo">
+<body>
+  <div id="chat">
+    <div id="roomBar">
+      Room: <span id="roomId"></span>
+      <button id="newRoomBtn">New Room</button>
+    </div>
+    <div id="qr"></div>
+    <div id="shareLink"></div>
+    <div id="messages"></div>
+    <div id="inputBar">
+      <input type="text" id="msgInput" placeholder="Type message...">
+      <button id="sendBtn">Send</button>
+    </div>
   </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <!-- QR Code JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    // Navigate to chat page when user taps or clicks anywhere
-    document.getElementById('splash-main').addEventListener('click', function() {
-      window.location.href = 'chat.html';
+    // 1. 🔑 FILL IN YOUR FIREBASE CONFIG HERE:
+    var firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com/",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    var db = firebase.database();
+
+    // 2. Generate long, cryptographically random room codes
+    function randomRoom() {
+      let arr = new Uint32Array(6);
+      window.crypto.getRandomValues(arr);
+      return Array.from(arr).map(x => x.toString(36)).join('').toUpperCase();
+    }
+
+    function getRoomFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('room');
+    }
+
+    function setRoomInUrl(room) {
+      window.history.replaceState({}, '', '?room=' + room);
+    }
+
+    // 3. State
+    let room = getRoomFromUrl() || randomRoom();
+    setRoomInUrl(room);
+
+    // 4. Display room code and QR
+    document.getElementById('roomId').textContent = room;
+    function updateQRandLink() {
+      document.getElementById('qr').innerHTML = "";
+      const joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
+      new QRCode(document.getElementById('qr'), {
+        text: joinUrl,
+        width: 180,
+        height: 180
+      });
+      document.getElementById('shareLink').textContent = "Share this link: " + joinUrl;
+    }
+    updateQRandLink();
+
+    // 5. Listen for new messages
+    const messagesDiv = document.getElementById('messages');
+    function addMsg(text, sender) {
+      const div = document.createElement('div');
+      div.className = 'msg';
+      div.textContent = (sender ? (sender + ': ') : '') + text;
+      messagesDiv.appendChild(div);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+    let msgListenerRef = db.ref('chatrooms/' + room + '/messages');
+    msgListenerRef.on('child_added', snap => {
+      const msg = snap.val();
+      addMsg(msg.text, msg.sender);
     });
-    // Make whole screen clickable (for mobile)
-    document.body.addEventListener('touchstart', function() {
-      window.location.href = 'chat.html';
-    }, { once: true });
+
+    // 6. Send new message
+    const msgInput = document.getElementById('msgInput');
+    function sendMsg() {
+      const text = msgInput.value.trim();
+      if (!text) return;
+      db.ref('chatrooms/' + room + '/messages').push({
+        text: text,
+        sender: 'Anon'
+      });
+      msgInput.value = '';
+    }
+    document.getElementById('sendBtn').onclick = sendMsg;
+    msgInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') sendMsg();
+    });
+
+    // 7. New room button
+    document.getElementById('newRoomBtn').onclick = function() {
+      // Remove old listener
+      msgListenerRef.off();
+      room = randomRoom();
+      setRoomInUrl(room);
+      document.getElementById('roomId').textContent = room;
+      messagesDiv.innerHTML = "";
+      updateQRandLink();
+      // Set up new listener
+      msgListenerRef = db.ref('chatrooms/' + room + '/messages');
+      msgListenerRef.on('child_added', snap => {
+        const msg = snap.val();
+        addMsg(msg.text, msg.sender);
+      });
+    };
   </script>
 </body>
 </html>
