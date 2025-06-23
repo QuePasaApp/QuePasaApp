@@ -12,14 +12,18 @@
       background-size: 320px 320px;
     }
     .support-link {
-      position: absolute;
-      left: 50px;
-      top: 40px;
-      font-size: 1.4em;
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 1.6em;
       color: #2ecc71;
       text-decoration: none;
-      font-weight: 600;
-      z-index: 2;
+      font-weight: 700;
+      background: #fff;
+      padding: 22px 0 13px 0;
+      margin-bottom: 6px;
+      border-bottom: 2px solid #e0e0e0;
+      letter-spacing: 0.5px;
     }
     .support-link:hover {
       text-decoration: underline;
@@ -27,11 +31,11 @@
     }
     .center-box {
       max-width: 1700px;
-      margin: 90px auto 0 auto;
+      margin: 40px auto 0 auto;
       background: #fff;
       border-radius: 48px;
       box-shadow: 0 12px 48px #0001;
-      padding: 100px 48px 60px 48px;
+      padding: 40px 36px 45px 36px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -39,8 +43,8 @@
     }
     .big-x {
       position: absolute;
-      right: 45px;
-      top: 45px;
+      right: 40px;
+      top: 40px;
       width: 90px;
       height: 90px;
       background: #e74c3c;
@@ -67,12 +71,13 @@
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 110px;
-      margin-bottom: 60px;
+      gap: 60px;
+      margin-bottom: 36px;
+      width: 100%;
     }
     .logo-img, .qr-img {
-      width: 600px;
-      height: 600px;
+      width: 400px;
+      height: 400px;
       object-fit: contain;
       border-radius: 36px;
       background: #f8f8f8;
@@ -81,47 +86,51 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      margin: 0 auto;
     }
     .room-title {
-      margin-bottom: 30px;
-      font-size: 2.6em;
+      margin-bottom: 20px;
+      font-size: 2.1em;
       font-weight: 700;
       color: #111;
       text-align: center;
+      width: 100%;
     }
     .room-id {
       color: #2ecc71;
       font-family: monospace;
-      font-size: 2.2em;
+      font-size: 1.2em;
       margin-left: 10px;
       word-break: break-all;
     }
     .new-room-btn {
-      margin-left: 30px;
-      font-size: 1.5em;
+      margin-left: 20px;
+      font-size: 1.1em;
       background: #2ecc71;
       color: #fff;
       border: none;
-      border-radius: 16px;
-      padding: 12px 40px;
+      border-radius: 12px;
+      padding: 9px 28px;
       font-weight: bold;
       cursor: pointer;
     }
-    .new-room-btn:hover { background: #1e9f4d; }
+    .new-room-btn:hover {
+      background: #1e9f4d;
+    }
     .msg-area {
       width: 100%;
-      min-height: 600px;
+      min-height: 300px;
       background: #fafafa;
-      border: 3px solid #eee;
-      border-radius: 32px;
-      margin-bottom: 28px;
-      padding: 32px 28px 12px 28px;
+      border: 2px solid #eee;
+      border-radius: 18px;
+      margin-bottom: 18px;
+      padding: 20px 15px 7px 15px;
       overflow-y: auto;
-      font-size: 2.7em;
-      max-height: 850px;
+      font-size: 1.6em;
+      max-height: 500px;
     }
     .msg {
-      margin-bottom: 32px;
+      margin-bottom: 18px;
       word-break: break-word;
     }
     .sender {
@@ -134,21 +143,22 @@
     .input-row {
       display: flex;
       width: 100%;
-      gap: 24px;
+      gap: 12px;
+      margin-bottom: 10px;
     }
     #msgInput {
       flex: 1;
-      font-size: 2.3em;
-      padding: 28px;
-      border-radius: 20px;
-      border: 3px solid #ddd;
+      font-size: 1.2em;
+      padding: 13px;
+      border-radius: 10px;
+      border: 2px solid #ddd;
       outline: none;
       background: #f7f7f7;
     }
     #sendBtn {
-      font-size: 2em;
-      padding: 18px 60px;
-      border-radius: 20px;
+      font-size: 1.1em;
+      padding: 12px 30px;
+      border-radius: 10px;
       border: none;
       background: #2ecc71;
       color: #fff;
@@ -156,22 +166,66 @@
       font-weight: bold;
     }
     #sendBtn:hover { background: #1e9f4d; }
-    @media (max-width: 1600px) {
-      .center-box { max-width: 99vw; padding: 4vw 1vw 4vw 1vw; }
-      .top-row { flex-direction: column; gap: 40px; }
-      .logo-img, .qr-img { width: 85vw; height: 85vw; min-width: 180px; min-height: 180px; max-width: 95vw; max-height: 95vw;}
-      .msg-area { font-size: 1.5em; min-height: 220px; padding: 10vw 2vw 4vw 2vw; }
-      #msgInput { font-size: 1.2em; padding: 7vw; }
-      #sendBtn { font-size: 1.1em; padding: 3vw 5vw; }
-      .room-title { font-size: 1.5em; }
-      .room-id { font-size: 1em; }
-      .big-x { width: 60px; height: 60px; right: 16px; top: 16px;}
+    .bottom-link {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 1.3em;
+      color: #16a085;
+      text-decoration: underline;
+      margin-top: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      margin-bottom: -10px;
+    }
+    @media (max-width: 900px) {
+      .center-box {
+        max-width: 98vw;
+        padding: 3vw 2vw 3vw 2vw;
+        border-radius: 18px;
+      }
+      .big-x { width: 60px; height: 60px; right: 10px; top: 10px;}
       .big-x svg { width: 34px; height: 34px;}
+      .top-row {
+        flex-direction: column;
+        gap: 22px;
+        width: 100%;
+      }
+      .logo-img, .qr-img {
+        width: 70vw;
+        height: 70vw;
+        min-width: 120px;
+        min-height: 120px;
+        max-width: 96vw;
+        max-height: 96vw;
+      }
+      .room-title { font-size: 1.14em; }
+      .room-id { font-size: 1em; }
+      .msg-area { font-size: 1.06em; min-height: 130px; max-height: 230px; }
+      #msgInput { font-size: 1.1em; padding: 4vw; }
+      #sendBtn { font-size: 1.1em; padding: 2vw 6vw; }
+      .new-room-btn { font-size: 0.97em; padding: 7px 16px; }
+      .bottom-link { font-size: 1.1em; }
+    }
+    @media (max-width: 500px) {
+      .center-box { padding: 6vw 1vw 4vw 1vw; }
+      .logo-img, .qr-img {
+        width: 92vw;
+        height: 92vw;
+        min-width: 70px;
+        min-height: 70px;
+        max-width: 98vw;
+        max-height: 98vw;
+      }
+      .msg-area { padding: 10px 4px 6px 6px; }
     }
   </style>
 </head>
 <body>
-  <a class="support-link" href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener">Cash App Support</a>
+  <a class="support-link" href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener">$QuePasaApp</a>
   <div class="center-box">
     <div class="big-x" id="leaveBtn" title="Leave Chat">
       <svg viewBox="0 0 100 100">
@@ -193,6 +247,7 @@
       <input type="text" id="msgInput" placeholder="Type message..." autocomplete="off">
       <button id="sendBtn">Send</button>
     </div>
+    <a class="bottom-link" href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener">$QuePasaApp</a>
   </div>
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -270,13 +325,17 @@
     function renderQR() {
       let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
       document.getElementById('qr').innerHTML = "";
+      // Responsively set QR size
+      let qrSize = 400;
+      if (window.innerWidth < 600) qrSize = Math.floor(window.innerWidth * 0.72);
       new QRCode(document.getElementById('qr'), {
         text: joinUrl,
-        width: 600,
-        height: 600
+        width: qrSize,
+        height: qrSize
       });
     }
     renderQR();
+    window.addEventListener('resize', renderQR);
 
     // Messages logic
     const messagesDiv = document.getElementById('messages');
