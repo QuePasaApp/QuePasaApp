@@ -8,22 +8,19 @@
     body {
       font-family: sans-serif;
       margin: 0; padding: 0;
+      /* Tiled QuePasaLogo.png background */
       background: #f3f3f3 url('QuePasaLogo.png') repeat;
       background-size: 320px 320px;
     }
     .support-link {
-      display: block;
-      width: 100%;
-      text-align: center;
-      font-size: 1.6em;
+      position: absolute;
+      left: 50px;
+      top: 40px;
+      font-size: 1.4em;
       color: #2ecc71;
       text-decoration: none;
-      font-weight: 700;
-      background: #fff;
-      padding: 22px 0 13px 0;
-      margin-bottom: 6px;
-      border-bottom: 2px solid #e0e0e0;
-      letter-spacing: 0.5px;
+      font-weight: 600;
+      z-index: 2;
     }
     .support-link:hover {
       text-decoration: underline;
@@ -31,53 +28,27 @@
     }
     .center-box {
       max-width: 1700px;
-      margin: 40px auto 0 auto;
+      margin: 90px auto 0 auto;
       background: #fff;
       border-radius: 48px;
       box-shadow: 0 12px 48px #0001;
-      padding: 40px 36px 45px 36px;
+      padding: 100px 48px 60px 48px;
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
-    }
-    .big-x {
-      position: absolute;
-      right: 40px;
-      top: 40px;
-      width: 90px;
-      height: 90px;
-      background: #e74c3c;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 10;
-      box-shadow: 0 4px 24px #0004;
-      transition: background 0.2s;
-      border: 4px solid #fff;
-    }
-    .big-x:hover {
-      background: #c0392b;
-    }
-    .big-x svg {
-      width: 55px;
-      height: 55px;
-      display: block;
     }
     .top-row {
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 60px;
-      margin-bottom: 36px;
-      width: 100%;
+      gap: 110px;
+      margin-bottom: 60px;
     }
     .logo-img, .qr-img {
-      width: 400px;
-      height: 400px;
+      width: 600px;
+      height: 600px;
       object-fit: contain;
       border-radius: 36px;
       background: #f8f8f8;
@@ -86,85 +57,47 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto;
     }
     .room-title {
-      margin-bottom: 20px;
-      font-size: 2.1em;
+      margin-bottom: 30px;
+      font-size: 2.6em;
       font-weight: 700;
       color: #111;
       text-align: center;
-      width: 100%;
     }
     .room-id {
       color: #2ecc71;
       font-family: monospace;
-      font-size: 1.2em;
+      font-size: 2.2em;
       margin-left: 10px;
       word-break: break-all;
     }
     .new-room-btn {
-      margin-left: 20px;
-      font-size: 1.1em;
+      margin-left: 30px;
+      font-size: 1.5em;
       background: #2ecc71;
       color: #fff;
       border: none;
-      border-radius: 12px;
-      padding: 9px 28px;
+      border-radius: 16px;
+      padding: 12px 40px;
       font-weight: bold;
       cursor: pointer;
     }
-    .new-room-btn:hover {
-      background: #1e9f4d;
-    }
+    .new-room-btn:hover { background: #1e9f4d; }
     .msg-area {
       width: 100%;
-      min-height: 300px;
+      min-height: 600px;
       background: #fafafa;
-      border: 2px solid #eee;
-      border-radius: 18px;
-      margin-bottom: 18px;
-      padding: 20px 15px 7px 15px;
+      border: 3px solid #eee;
+      border-radius: 32px;
+      margin-bottom: 28px;
+      padding: 32px 28px 12px 28px;
       overflow-y: auto;
-      font-size: 1.6em;
-      max-height: 500px;
-    }
-    .alone-message {
-      color: #e74c3c;
-      background: #fff4f4;
-      border: 2px solid #e74c3c;
-      border-radius: 10px;
-      text-align: center;
-      font-size: 1.25em;
-      margin: 14px auto 8px auto;
-      padding: 18px 10px;
-      max-width: 520px;
-      font-weight: bold;
-      letter-spacing: 0.5px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-    }
-    .alone-message .new-room-btn {
-      margin-left: 0;
-      margin-top: 12px;
-      font-size: 1.1em;
-      padding: 7px 30px;
-      background: #2ecc71;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
-      display: inline-block;
-    }
-    .alone-message .new-room-btn:hover {
-      background: #1e9f4d;
+      font-size: 2.7em;
+      max-height: 850px;
     }
     .msg {
-      margin-bottom: 18px;
+      margin-bottom: 32px;
       word-break: break-word;
     }
     .sender {
@@ -177,22 +110,21 @@
     .input-row {
       display: flex;
       width: 100%;
-      gap: 12px;
-      margin-bottom: 10px;
+      gap: 24px;
     }
     #msgInput {
       flex: 1;
-      font-size: 1.2em;
-      padding: 13px;
-      border-radius: 10px;
-      border: 2px solid #ddd;
+      font-size: 2.3em;
+      padding: 28px;
+      border-radius: 20px;
+      border: 3px solid #ddd;
       outline: none;
       background: #f7f7f7;
     }
     #sendBtn {
-      font-size: 1.1em;
-      padding: 12px 30px;
-      border-radius: 10px;
+      font-size: 2em;
+      padding: 18px 60px;
+      border-radius: 20px;
       border: none;
       background: #2ecc71;
       color: #fff;
@@ -200,75 +132,21 @@
       font-weight: bold;
     }
     #sendBtn:hover { background: #1e9f4d; }
-    .bottom-link {
-      display: block;
-      width: 100%;
-      text-align: center;
-      font-size: 1.3em;
-      color: #16a085;
-      text-decoration: underline;
-      margin-top: 20px;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      margin-bottom: -10px;
-    }
-    @media (max-width: 900px) {
-      .center-box {
-        max-width: 98vw;
-        padding: 3vw 2vw 3vw 2vw;
-        border-radius: 18px;
-      }
-      .big-x { width: 60px; height: 60px; right: 10px; top: 10px;}
-      .big-x svg { width: 34px; height: 34px;}
-      .top-row {
-        flex-direction: column;
-        gap: 22px;
-        width: 100%;
-      }
-      .logo-img, .qr-img {
-        width: 70vw;
-        height: 70vw;
-        min-width: 120px;
-        min-height: 120px;
-        max-width: 96vw;
-        max-height: 96vw;
-      }
-      .room-title { font-size: 1.14em; }
+    @media (max-width: 1600px) {
+      .center-box { max-width: 99vw; padding: 4vw 1vw 4vw 1vw; }
+      .top-row { flex-direction: column; gap: 40px; }
+      .logo-img, .qr-img { width: 85vw; height: 85vw; min-width: 180px; min-height: 180px; max-width: 95vw; max-height: 95vw;}
+      .msg-area { font-size: 1.5em; min-height: 220px; padding: 10vw 2vw 4vw 2vw; }
+      #msgInput { font-size: 1.2em; padding: 7vw; }
+      #sendBtn { font-size: 1.1em; padding: 3vw 5vw; }
+      .room-title { font-size: 1.5em; }
       .room-id { font-size: 1em; }
-      .msg-area { font-size: 1.06em; min-height: 130px; max-height: 230px; }
-      #msgInput { font-size: 1.1em; padding: 4vw; }
-      #sendBtn { font-size: 1.1em; padding: 2vw 6vw; }
-      .new-room-btn { font-size: 0.97em; padding: 7px 16px; }
-      .bottom-link { font-size: 1.1em; }
-      .alone-message { font-size: 1em; padding: 10px 4px; }
-    }
-    @media (max-width: 500px) {
-      .center-box { padding: 6vw 1vw 4vw 1vw; }
-      .logo-img, .qr-img {
-        width: 92vw;
-        height: 92vw;
-        min-width: 70px;
-        min-height: 70px;
-        max-width: 98vw;
-        max-height: 98vw;
-      }
-      .msg-area { padding: 10px 4px 6px 6px; }
     }
   </style>
 </head>
 <body>
-  <a class="support-link" href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener">$QuePasaApp</a>
+  <a class="support-link" href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener">Cash App Support</a>
   <div class="center-box">
-    <div class="big-x" id="leaveBtn" title="Leave Chat">
-      <svg viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="48" fill="none"/>
-        <line x1="28" y1="28" x2="72" y2="72" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
-        <line x1="72" y1="28" x2="28" y2="72" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
-      </svg>
-    </div>
     <div class="top-row">
       <img class="logo-img" src="QuePasaLogo.png" alt="Que Pasa Logo" />
       <div class="qr-img" id="qr"></div>
@@ -278,12 +156,10 @@
       <button class="new-room-btn" id="newRoomBtn">New Room</button>
     </div>
     <div class="msg-area" id="messages"></div>
-    <div id="aloneContainer"></div>
     <div class="input-row">
       <input type="text" id="msgInput" placeholder="Type message..." autocomplete="off">
       <button id="sendBtn">Send</button>
     </div>
-    <a class="bottom-link" href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener">$QuePasaApp</a>
   </div>
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -291,6 +167,7 @@
   <!-- QR Code JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
+    // Firebase config (from your setup)
     var firebaseConfig = {
       apiKey: "AIzaSyDj9I6Rt64jHqA0AhhVQtHDshz5v03s3x8",
       authDomain: "quepasaapp-8c246.firebaseapp.com",
@@ -302,8 +179,7 @@
     firebase.initializeApp(firebaseConfig);
     var db = firebase.database();
 
-    // --- User presence logic ---
-    let room, myId, myName, msgListenerRef, presenceRef, presenceListener;
+    // Room utilities
     function randomRoom() {
       let arr = new Uint32Array(4);
       window.crypto.getRandomValues(arr);
@@ -316,6 +192,8 @@
     function setRoomInUrl(room) {
       window.history.replaceState({}, '', '?room=' + room);
     }
+
+    // Assign name per room
     function assignName(room) {
       const colors = [
         "White", "Black", "Green", "Red", "Blue", "Orange", "Purple", "Yellow", "Pink", "Brown",
@@ -328,61 +206,43 @@
       sessionStorage.setItem(key, name);
       return name;
     }
+
+    // Color mapping
     const colorStyles = {
-      White: "#eaeaea", Black: "#222", Green: "#2ecc71", Red: "#e74c3c", Blue: "#3498db",
-      Orange: "#e67e22", Purple: "#9b59b6", Yellow: "#f1c40f", Pink: "#ff69b4", Brown: "#a0522d",
-      Cyan: "#1abc9c", Magenta: "#e040fb", Teal: "#008080", Indigo: "#3f51b5", Lime: "#cddc39", Violet: "#8e24aa"
+      White: "#eaeaea",
+      Black: "#222",
+      Green: "#2ecc71",
+      Red: "#e74c3c",
+      Blue: "#3498db",
+      Orange: "#e67e22",
+      Purple: "#9b59b6",
+      Yellow: "#f1c40f",
+      Pink: "#ff69b4",
+      Brown: "#a0522d",
+      Cyan: "#1abc9c",
+      Magenta: "#e040fb",
+      Teal: "#008080",
+      Indigo: "#3f51b5",
+      Lime: "#cddc39",
+      Violet: "#8e24aa"
     };
 
-    function setupRoom(newRoom) {
-      // --- CLEANUP old listeners ---
-      if (msgListenerRef) msgListenerRef.off();
-      if (presenceRef) {
-        if (presenceListener) presenceRef.off('value', presenceListener);
-        if (myId) presenceRef.child(myId).remove();
-      }
-      sessionStorage.removeItem('colorName_' + (room || ''));
-      // --- SETUP new room ---
-      room = newRoom;
-      setRoomInUrl(room);
-      document.getElementById('roomId').textContent = room;
-      document.getElementById('messages').innerHTML = "";
-      document.getElementById('aloneContainer').innerHTML = "";
-      renderQR();
-      myName = assignName(room);
-      myId = (Math.random().toString(36)+Date.now().toString(36));
-      // User presence
-      presenceRef = db.ref('chatrooms/' + room + '/presence');
-      presenceRef.child(myId).set({name: myName, ts: firebase.database.ServerValue.TIMESTAMP});
-      presenceRef.child(myId).onDisconnect().remove(); // Remove self on disconnect
-      // Listen for presence changes
-      presenceListener = function(snapshot) {
-        const presence = snapshot.val() || {};
-        const others = Object.keys(presence).filter(k => k !== myId);
-        showAloneUI(others.length === 0);
-      };
-      presenceRef.on('value', presenceListener);
-      // Listen for messages
-      msgListenerRef = db.ref('chatrooms/' + room + '/messages');
-      msgListenerRef.on('child_added', snap => {
-        const msg = snap.val();
-        addMsg(msg.text, msg.sender);
-      });
-    }
+    // Setup
+    let room = getRoomFromUrl() || randomRoom();
+    setRoomInUrl(room);
+    document.getElementById('roomId').textContent = room;
+    let myName = assignName(room);
 
-    function renderQR() {
-      let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
-      document.getElementById('qr').innerHTML = "";
-      let qrSize = 400;
-      if (window.innerWidth < 600) qrSize = Math.floor(window.innerWidth * 0.72);
-      new QRCode(document.getElementById('qr'), {
-        text: joinUrl,
-        width: qrSize,
-        height: qrSize
-      });
-    }
-    window.addEventListener('resize', renderQR);
+    // QR for join URL
+    let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
+    document.getElementById('qr').innerHTML = "";
+    new QRCode(document.getElementById('qr'), {
+      text: joinUrl,
+      width: 600,
+      height: 600
+    });
 
+    // Messages logic
     const messagesDiv = document.getElementById('messages');
     function addMsg(text, sender) {
       const div = document.createElement('div');
@@ -395,28 +255,11 @@
       messagesDiv.appendChild(div);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
-
-    // Show/hide "You're alone" UI
-    function showAloneUI(isAlone) {
-      const container = document.getElementById('aloneContainer');
-      container.innerHTML = "";
-      if (isAlone) {
-        const aloneDiv = document.createElement('div');
-        aloneDiv.className = 'alone-message';
-        aloneDiv.innerHTML = `You're alone. Create new room.<br>`;
-        const btn = document.createElement('button');
-        btn.className = 'new-room-btn';
-        btn.innerText = 'Create New Room';
-        btn.onclick = function() {
-          setupRoom(randomRoom());
-        };
-        aloneDiv.appendChild(btn);
-        container.appendChild(aloneDiv);
-      }
-    }
-
-    // --- Initial room setup ---
-    setupRoom(getRoomFromUrl() || randomRoom());
+    let msgListenerRef = db.ref('chatrooms/' + room + '/messages');
+    msgListenerRef.on('child_added', snap => {
+      const msg = snap.val();
+      addMsg(msg.text, msg.sender);
+    });
 
     // Send message
     const msgInput = document.getElementById('msgInput');
@@ -436,12 +279,25 @@
 
     // New room button
     document.getElementById('newRoomBtn').onclick = function() {
-      setupRoom(randomRoom());
-    };
-
-    // Leave (big red X) button logic
-    document.getElementById('leaveBtn').onclick = function() {
-      setupRoom(randomRoom());
+      msgListenerRef.off();
+      sessionStorage.removeItem('colorName_' + room);
+      room = randomRoom();
+      setRoomInUrl(room);
+      document.getElementById('roomId').textContent = room;
+      document.getElementById('messages').innerHTML = "";
+      joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
+      document.getElementById('qr').innerHTML = "";
+      new QRCode(document.getElementById('qr'), {
+        text: joinUrl,
+        width: 600,
+        height: 600
+      });
+      msgListenerRef = db.ref('chatrooms/' + room + '/messages');
+      msgListenerRef.on('child_added', snap => {
+        const msg = snap.val();
+        addMsg(msg.text, msg.sender);
+      });
+      myName = assignName(room);
     };
   </script>
 </body>
