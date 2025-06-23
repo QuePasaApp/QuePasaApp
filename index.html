@@ -2,26 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Secure Chat Room</title>
+  <title>Que Pasa App Chat Room</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     html, body {
-      height: 100%; min-height: 100%;
+      height: 100%;
       margin: 0; padding: 0;
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: #f3f3f3;
-      box-sizing: border-box;
     }
     body {
       min-height: 100vh;
-      background: #f3f3f3 url('YOUR_LOGO.png') repeat center center;
-      background-size: 160px 160px;
+      background: #f3f3f3 url('Quepasalogo.png') no-repeat center center fixed;
+      background-size: cover;
     }
     #main {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
+      background: rgba(255,255,255,0.72);
     }
     #topInfo {
       flex: 1;
@@ -29,69 +28,83 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding-bottom: 120px;
+      padding-bottom: 80px;
+      padding-top: 30px;
     }
     #qrRow {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 38px;
-      margin-bottom: 20px;
+      gap: 48px;
+      margin-bottom: 30px;
+      margin-top: 30px;
     }
     #qr {
       background: #fff;
-      border-radius: 24px;
+      border-radius: 30px;
       box-shadow: 0 4px 36px #0002;
-      padding: 24px;
+      padding: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 220px;
-      min-height: 220px;
-      cursor: pointer;
-      transition: box-shadow 0.18s;
-    }
-    #qr:hover {
-      box-shadow: 0 8px 50px #2ecc7133;
+      min-width: 320px;
+      min-height: 320px;
     }
     #tipBox {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
       background: rgba(255,255,255,0.92);
-      border-radius: 18px;
-      padding: 18px 20px;
-      font-size: 1.05em;
+      border-radius: 22px;
+      padding: 32px 34px;
+      font-size: 1.17em;
       box-shadow: 0 2px 14px #2ecc7144;
+      min-width: 260px;
     }
     #tipBox label {
       color: #2ecc71;
       font-weight: bold;
-      font-size: 1.11em;
-      margin-bottom: 5px;
+      font-size: 1.15em;
+      margin-bottom: 14px;
+      letter-spacing: 0.5px;
+    }
+    #coffeeIcon {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 12px;
+      vertical-align: middle;
+    }
+    #cashAppLogo {
+      width: 55px;
+      height: 55px;
+      margin-bottom: 10px;
+      border-radius: 13px;
+      box-shadow: 0 2px 8px #2ecc7140;
+      margin-top: 8px;
     }
     #cashTag {
-      font-size: 1.19em;
+      font-size: 1.32em;
       color: #222;
       font-weight: bold;
       background: #e8ffe8;
-      border-radius: 9px;
-      padding: 4px 10px;
-      margin-bottom: 7px;
+      border-radius: 12px;
+      padding: 10px 22px;
+      margin-bottom: 4px;
+      margin-top: 7px;
+      letter-spacing: 1px;
     }
-    #shareLink {
-      font-size: 0.97em;
+    #cashDesc {
+      font-size: 1.05em;
       color: #888;
-      margin-top: 6px;
-      margin-bottom: 8px;
-      word-break: break-all;
+      margin-top: 3px;
+      text-align: center;
     }
     #roomId {
       font-family: monospace;
       color: #2ecc71;
       font-weight: bold;
       letter-spacing: 2px;
-      font-size: 1.12em;
+      font-size: 1.19em;
       background: #fff;
       border-radius: 8px;
       padding: 3px 12px;
@@ -99,14 +112,12 @@
     }
     #chatBar {
       width: 100%;
-      max-width: 600px;
+      max-width: 700px;
       margin: 0 auto;
       position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      left: 0; right: 0; bottom: 0;
       padding: 0 0 20px 0;
-      background: linear-gradient(to top, #f3f3f3 92%, #ffffff00 100%);
+      background: linear-gradient(to top, #f3f3f3 95%, #ffffff00 100%);
       z-index: 10;
       display: flex;
       flex-direction: column;
@@ -114,21 +125,21 @@
     }
     #messages {
       width: 100%;
-      max-width: 600px;
-      height: 90px;
+      max-width: 700px;
+      height: 260px;
       overflow-y: auto;
-      border-radius: 10px 10px 0 0;
+      border-radius: 14px 14px 0 0;
       background: #fff;
-      padding: 10px 14px 4px 14px;
+      padding: 20px 20px 8px 20px;
       box-shadow: 0 1px 8px #2ecc710c;
-      font-size: 1em;
+      font-size: 1.13em;
       margin-bottom: 0;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
     }
     .msg {
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       word-break: break-word;
       color: #333;
     }
@@ -138,28 +149,28 @@
     }
     #inputBar {
       width: 100%;
-      max-width: 600px;
+      max-width: 700px;
       display: flex;
       background: #fff;
-      border-radius: 0 0 14px 14px;
+      border-radius: 0 0 16px 16px;
       box-shadow: 0 4px 16px #2ecc7109;
-      padding: 6px 8px;
+      padding: 12px 12px;
       border-top: 1px solid #eee;
-      gap: 8px;
+      gap: 10px;
     }
     #msgInput {
       flex: 1;
-      font-size: 1.05em;
-      padding: 10px;
-      border-radius: 8px;
+      font-size: 1.17em;
+      padding: 14px;
+      border-radius: 10px;
       border: 1px solid #ddd;
       outline: none;
       background: #f7f7f7;
     }
     #sendBtn {
-      font-size: 1.04em;
-      padding: 9px 18px;
-      border-radius: 8px;
+      font-size: 1.11em;
+      padding: 13px 24px;
+      border-radius: 10px;
       border: none;
       background: #2ecc71;
       color: #fff;
@@ -168,87 +179,46 @@
     }
     #sendBtn:hover { background: #1e9f4d; }
     #newRoomBtn {
-      margin-left: 18px;
+      margin-left: 20px;
       font-size: 1em;
       background: #2ecc71;
       color: #fff;
       border: none;
       border-radius: 8px;
-      padding: 7px 14px;
+      padding: 8px 16px;
       font-weight: bold;
       cursor: pointer;
       box-shadow: 0 1px 7px #2ecc710c;
     }
     #newRoomBtn:hover { background: #1e9f4d; }
-
-    /* Fullscreen QR overlay */
-    #qrOverlay {
-      display: none;
-      position: fixed;
-      z-index: 9999;
-      left: 0; top: 0; width: 100vw; height: 100vh;
-      background: rgba(243,243,243,0.97);
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      animation: fadeIn 0.17s;
-    }
-    #qrOverlay.visible { display: flex; }
-    #qrOverlayContent {
-      display: flex;
-      align-items: center;
-      gap: 36px;
-      flex-wrap: wrap;
-    }
-    #qrOverlay .largeQR {
-      background: #fff;
-      border-radius: 28px;
-      box-shadow: 0 6px 40px #2ecc7130;
-      padding: 36px;
-      min-width: 320px;
-      min-height: 320px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #qrOverlay .closeBtn {
-      position: absolute;
-      top: 28px;
-      right: 38px;
-      font-size: 2.1em;
-      background: none;
-      border: none;
-      color: #888;
-      cursor: pointer;
-      z-index: 10000;
-      transition: color 0.17s;
-    }
-    #qrOverlay .closeBtn:hover { color: #2ecc71; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
     @media (max-width: 900px) {
-      #qrRow, #qrOverlayContent { flex-direction: column; gap: 18px; }
-      #qr, #qrOverlay .largeQR { min-width: 0; min-height: 0; }
-      #tipBox { min-width: 160px; }
+      #qrRow { flex-direction: column; gap: 18px; }
+      #tipBox, #qr { min-width: 0; min-height: 0; }
+      #main, #chatBar, #messages, #inputBar { max-width: 100vw; }
+      #chatBar { padding-bottom: 5vw; }
+      #topInfo { padding-bottom: 110px; }
     }
   </style>
 </head>
 <body>
   <div id="main">
     <div id="topInfo">
-      <div class="roomTitle">
+      <div class="roomTitle" style="margin-top: 16px;">
         Room: <span id="roomId"></span>
         <button id="newRoomBtn" title="Start a new chat room">New Room</button>
       </div>
       <div id="qrRow">
-        <div id="qr" title="Tap to enlarge QR"></div>
+        <div id="qr"></div>
         <div id="tipBox">
-          <label>Tip the creator 💚</label>
-          <div id="cashTag">$YOURCASHAPP</div>
-          <span style="font-size:0.97em;color:#888;">Thank you for supporting!</span>
+          <img id="coffeeIcon" src="CUP-OF-COFFEE.png" alt="Coffee" />
+          <label>Buy me a cup of coffee</label>
+          <a id="cashAppLink" href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener">
+            <img id="cashAppLogo" src="CASH_APP_LOGO.png" alt="Cash App">
+          </a>
+          <div id="cashTag">$QuePasaApp</div>
+          <div id="cashDesc">Thank you for supporting!</div>
         </div>
       </div>
-      <div id="shareLink"></div>
     </div>
     <div id="chatBar">
       <div id="messages"></div>
@@ -258,22 +228,6 @@
       </div>
     </div>
   </div>
-
-  <!-- QR ENLARGE OVERLAY -->
-  <div id="qrOverlay">
-    <button class="closeBtn" aria-label="Close">&times;</button>
-    <div id="qrOverlayContent">
-      <div class="largeQR" id="largeQR"></div>
-      <div id="largeTipBox">
-        <label style="color:#2ecc71;font-weight:bold;font-size:1.11em;margin-bottom:5px;">Tip the creator 💚</label>
-        <div style="font-size:1.19em;color:#222;font-weight:bold;background:#e8ffe8;border-radius:9px;padding:4px 10px;margin-bottom:7px;">
-          $YOURCASHAPP
-        </div>
-        <span style="font-size:0.97em;color:#888;">Thank you for supporting!</span>
-      </div>
-    </div>
-  </div>
-
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -311,8 +265,8 @@
 
     // 3. Color name pool
     const colorNames = [
-      "Green", "Red", "Blue", "Orange", "Purple", "Yellow", "Pink", "Brown",
-      "White", "Black", "Cyan", "Magenta", "Teal", "Indigo", "Lime", "Violet"
+      "White", "Black", "Green", "Red", "Blue", "Orange", "Purple", "Yellow", "Pink", "Brown",
+      "Cyan", "Magenta", "Teal", "Indigo", "Lime", "Violet"
     ];
 
     // 4. Assign user a persistent random color name per room (stored in sessionStorage)
@@ -328,9 +282,8 @@
       let available = colorNames.filter(c => !used.has(c));
       if (available.length === 0) available = colorNames;
       const color = available[Math.floor(Math.random() * available.length)];
-      const name = `Mr ${color}`;
+      const name = `Mister ${color}`;
       sessionStorage.setItem(key, name);
-      // Register in users list
       db.ref('chatrooms/' + room + '/users').push({ color: color, joined: Date.now() });
       return name;
     }
@@ -344,46 +297,20 @@
     let myName = null;
     assignUserName(room).then(name => { myName = name; });
 
-    // 7. Display QR and link (as before)
+    // 7. Display QR and link
     let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
     function updateQRandLink() {
       document.getElementById('qr').innerHTML = "";
       joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
       new QRCode(document.getElementById('qr'), {
         text: joinUrl,
-        width: 220,
-        height: 220
+        width: 320,
+        height: 320
       });
-      document.getElementById('shareLink').textContent = "Share this link: " + joinUrl;
     }
     updateQRandLink();
 
-    // 8. Enlarge QR on click
-    document.getElementById('qr').addEventListener('click', function() {
-      // Show overlay
-      document.getElementById('qrOverlay').classList.add('visible');
-      // Generate big QR
-      document.getElementById('largeQR').innerHTML = "";
-      new QRCode(document.getElementById('largeQR'), {
-        text: joinUrl,
-        width: 350,
-        height: 350
-      });
-    });
-    // Close overlay on X or click outside
-    document.querySelector('#qrOverlay .closeBtn').onclick = function() {
-      document.getElementById('qrOverlay').classList.remove('visible');
-      document.getElementById('largeQR').innerHTML = "";
-    };
-    // Also close if clicking outside content (mobile)
-    document.getElementById('qrOverlay').addEventListener('click', function(e) {
-      if (e.target === this) {
-        document.getElementById('qrOverlay').classList.remove('visible');
-        document.getElementById('largeQR').innerHTML = "";
-      }
-    });
-
-    // 9. Listen for new messages
+    // 8. Listen for new messages
     const messagesDiv = document.getElementById('messages');
     function addMsg(text, sender) {
       const div = document.createElement('div');
@@ -402,7 +329,7 @@
       addMsg(msg.text, msg.sender);
     });
 
-    // 10. Send new message
+    // 9. Send new message
     const msgInput = document.getElementById('msgInput');
     function sendMsg() {
       const text = msgInput.value.trim();
@@ -418,11 +345,10 @@
       if (e.key === 'Enter') sendMsg();
     });
 
-    // 11. New room button
+    // 10. New room button
     document.getElementById('newRoomBtn').onclick = function() {
       // Remove old listener
       msgListenerRef.off();
-      // Remove user color from session for old room:
       sessionStorage.removeItem('colorName_' + room);
       room = randomRoom();
       setRoomInUrl(room);
@@ -439,9 +365,9 @@
       assignUserName(room).then(name => { myName = name; });
     };
 
-    // 12. Insert your Cash App tag
-    document.getElementById('cashTag').textContent = '$YOURCASHAPP';
-    document.querySelector('#largeTipBox div').textContent = '$YOURCASHAPP';
+    // 11. Insert your Cash App tag and link
+    document.getElementById('cashTag').textContent = '$QuePasaApp';
+    document.getElementById('cashAppLink').href = 'https://cash.app/$QuePasaApp';
   </script>
 </body>
 </html>
