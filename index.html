@@ -144,7 +144,6 @@
       color: #333;
     }
     .me {
-      color: #2ecc71;
       font-weight: bold;
     }
     #inputBar {
@@ -247,7 +246,31 @@
     firebase.initializeApp(firebaseConfig);
     var db = firebase.database();
 
-    // 2. Generate long, cryptographically random room codes
+    // Color name pool and color mapping
+    const colorNames = [
+      "White", "Black", "Green", "Red", "Blue", "Orange", "Purple", "Yellow", "Pink", "Brown",
+      "Cyan", "Magenta", "Teal", "Indigo", "Lime", "Violet"
+    ];
+    const colorStyles = {
+      White: "#eaeaea",
+      Black: "#222",
+      Green: "#2ecc71",
+      Red: "#e74c3c",
+      Blue: "#3498db",
+      Orange: "#e67e22",
+      Purple: "#9b59b6",
+      Yellow: "#f1c40f",
+      Pink: "#ff69b4",
+      Brown: "#a0522d",
+      Cyan: "#1abc9c",
+      Magenta: "#e040fb",
+      Teal: "#008080",
+      Indigo: "#3f51b5",
+      Lime: "#cddc39",
+      Violet: "#8e24aa"
+    };
+
+    // Generate long, cryptographically random room codes
     function randomRoom() {
       let arr = new Uint32Array(6);
       window.crypto.getRandomValues(arr);
@@ -263,13 +286,7 @@
       window.history.replaceState({}, '', '?room=' + room);
     }
 
-    // 3. Color name pool
-    const colorNames = [
-      "White", "Black", "Green", "Red", "Blue", "Orange", "Purple", "Yellow", "Pink", "Brown",
-      "Cyan", "Magenta", "Teal", "Indigo", "Lime", "Violet"
-    ];
-
-    // 4. Assign user a persistent random color name per room (stored in sessionStorage)
+    // Assign user a persistent random color name per room (stored in sessionStorage)
     async function assignUserName(room) {
       const key = 'colorName_' + room;
       if (sessionStorage.getItem(key)) return sessionStorage.getItem(key);
@@ -288,16 +305,16 @@
       return name;
     }
 
-    // 5. State
+    // State
     let room = getRoomFromUrl() || randomRoom();
     setRoomInUrl(room);
     document.getElementById('roomId').textContent = room;
 
-    // 6. Assign user name
+    // Assign user name
     let myName = null;
     assignUserName(room).then(name => { myName = name; });
 
-    // 7. Display QR and link
+    // Display QR and link
     let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
     function updateQRandLink() {
       document.getElementById('qr').innerHTML = "";
@@ -310,16 +327,25 @@
     }
     updateQRandLink();
 
-    // 8. Listen for new messages
+    // Listen for new messages
     const messagesDiv = document.getElementById('messages');
     function addMsg(text, sender) {
       const div = document.createElement('div');
       div.className = 'msg';
-      if (sender === myName) {
-        div.innerHTML = `<span class="me">${sender}:</span> ${text}`;
-      } else {
-        div.textContent = (sender ? (sender + ': ') : '') + text;
+
+      // Extract assigned color from sender name
+      let color = null;
+      if (sender && sender.startsWith("Mister ")) {
+        color = sender.replace("Mister ", "").trim();
       }
+
+      // Use the color for the sender's name
+      if (sender === myName) {
+        div.innerHTML = `<span class="me" style="color:${colorStyles[color] || '#2ecc71'}">${sender}:</span> ${text}`;
+      } else {
+        div.innerHTML = `<span style="color:${colorStyles[color] || '#333'};font-weight:bold">${sender}:</span> ${text}`;
+      }
+
       messagesDiv.appendChild(div);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
     }
@@ -329,7 +355,7 @@
       addMsg(msg.text, msg.sender);
     });
 
-    // 9. Send new message
+    // Send new message
     const msgInput = document.getElementById('msgInput');
     function sendMsg() {
       const text = msgInput.value.trim();
@@ -345,7 +371,7 @@
       if (e.key === 'Enter') sendMsg();
     });
 
-    // 10. New room button
+    // New room button
     document.getElementById('newRoomBtn').onclick = function() {
       // Remove old listener
       msgListenerRef.off();
@@ -365,7 +391,7 @@
       assignUserName(room).then(name => { myName = name; });
     };
 
-    // 11. Insert your Cash App tag and link
+    // Insert your Cash App tag and link
     document.getElementById('cashTag').textContent = '$QuePasaApp';
     document.getElementById('cashAppLink').href = 'https://cash.app/$QuePasaApp';
   </script>
