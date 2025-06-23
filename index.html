@@ -7,17 +7,18 @@
   <style>
     body {
       font-family: sans-serif;
-      background: #f3f3f3;
       margin: 0; padding: 0;
+      background: #f3f3f3 url('QuePasaLogo.png') repeat;
+      background-size: 220px 220px;
     }
     .support-link {
       position: absolute;
-      left: 28px;
-      top: 24px;
-      font-size: 0.98em;
+      left: 40px;
+      top: 36px;
+      font-size: 1.15em;
       color: #2ecc71;
       text-decoration: none;
-      font-weight: 500;
+      font-weight: 600;
       z-index: 2;
     }
     .support-link:hover {
@@ -25,12 +26,12 @@
       color: #198f4d;
     }
     .center-box {
-      max-width: 430px;
-      margin: 50px auto 0 auto;
+      max-width: 1290px;
+      margin: 70px auto 0 auto;
       background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 4px 18px #0001;
-      padding: 32px 20px 22px 20px;
+      border-radius: 36px;
+      box-shadow: 0 8px 36px #0001;
+      padding: 70px 36px 44px 36px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -41,61 +42,61 @@
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 24px;
-      margin-bottom: 20px;
+      gap: 72px;
+      margin-bottom: 50px;
     }
     .logo-img, .qr-img {
-      width: 120px;
-      height: 120px;
+      width: 360px;
+      height: 360px;
       object-fit: contain;
-      border-radius: 12px;
+      border-radius: 24px;
       background: #f8f8f8;
-      border: 1px solid #eee;
-      box-shadow: 0 1px 6px #2221;
+      border: 2px solid #eee;
+      box-shadow: 0 2px 20px #2221;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     .room-title {
-      margin-bottom: 7px;
-      font-size: 1.09em;
-      font-weight: 600;
+      margin-bottom: 18px;
+      font-size: 2.1em;
+      font-weight: 700;
       color: #111;
       text-align: center;
     }
     .room-id {
       color: #2ecc71;
       font-family: monospace;
-      font-size: 1.08em;
-      margin-left: 3px;
+      font-size: 1.6em;
+      margin-left: 7px;
       word-break: break-all;
     }
     .new-room-btn {
-      margin-left: 12px;
-      font-size: 0.92em;
+      margin-left: 20px;
+      font-size: 1.12em;
       background: #2ecc71;
       color: #fff;
       border: none;
-      border-radius: 8px;
-      padding: 4px 14px;
+      border-radius: 12px;
+      padding: 8px 30px;
       font-weight: bold;
       cursor: pointer;
     }
     .new-room-btn:hover { background: #1e9f4d; }
     .msg-area {
       width: 100%;
-      min-height: 140px;
+      min-height: 420px;
       background: #fafafa;
-      border: 1px solid #eee;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      padding: 7px 8px 3px 8px;
+      border: 2px solid #eee;
+      border-radius: 18px;
+      margin-bottom: 20px;
+      padding: 22px 18px 8px 18px;
       overflow-y: auto;
-      font-size: 1.04em;
-      max-height: 190px;
+      font-size: 2.02em;
+      max-height: 570px;
     }
     .msg {
-      margin-bottom: 8px;
+      margin-bottom: 22px;
       word-break: break-word;
     }
     .sender {
@@ -108,21 +109,21 @@
     .input-row {
       display: flex;
       width: 100%;
-      gap: 7px;
+      gap: 16px;
     }
     #msgInput {
       flex: 1;
-      font-size: 1.07em;
-      padding: 9px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
+      font-size: 2em;
+      padding: 18px;
+      border-radius: 14px;
+      border: 2px solid #ddd;
       outline: none;
       background: #f7f7f7;
     }
     #sendBtn {
-      font-size: 1em;
-      padding: 8px 20px;
-      border-radius: 8px;
+      font-size: 1.5em;
+      padding: 14px 48px;
+      border-radius: 14px;
       border: none;
       background: #2ecc71;
       color: #fff;
@@ -130,10 +131,15 @@
       font-weight: bold;
     }
     #sendBtn:hover { background: #1e9f4d; }
-    @media (max-width: 700px) {
-      .center-box { max-width: 98vw; padding: 8vw 1vw 4vw 1vw; }
-      .top-row { flex-direction: column; gap: 12px; }
-      .logo-img, .qr-img { width: 32vw; height: 32vw; min-width: 90px; min-height: 90px; max-width: 180px; max-height: 180px;}
+    @media (max-width: 1200px) {
+      .center-box { max-width: 97vw; padding: 5vw 1vw 4vw 1vw; }
+      .top-row { flex-direction: column; gap: 25px; }
+      .logo-img, .qr-img { width: 75vw; height: 75vw; min-width: 160px; min-height: 160px; max-width: 96vw; max-height: 96vw;}
+      .msg-area { font-size: 1.3em; min-height: 210px; padding: 10vw 2vw 4vw 2vw; }
+      #msgInput { font-size: 1.2em; padding: 7vw; }
+      #sendBtn { font-size: 1.1em; padding: 3vw 5vw; }
+      .room-title { font-size: 1.4em; }
+      .room-id { font-size: 1em; }
     }
   </style>
 </head>
@@ -141,7 +147,7 @@
   <a class="support-link" href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener">Cash App Support</a>
   <div class="center-box">
     <div class="top-row">
-      <img class="logo-img" src="Quepasalogo.png" alt="Que Pasa Logo" />
+      <img class="logo-img" src="QuePasaLogo.png" alt="Que Pasa Logo" />
       <div class="qr-img" id="qr"></div>
     </div>
     <div class="room-title">
@@ -231,8 +237,8 @@
     document.getElementById('qr').innerHTML = "";
     new QRCode(document.getElementById('qr'), {
       text: joinUrl,
-      width: 120,
-      height: 120
+      width: 360,
+      height: 360
     });
 
     // Messages logic
@@ -282,8 +288,8 @@
       document.getElementById('qr').innerHTML = "";
       new QRCode(document.getElementById('qr'), {
         text: joinUrl,
-        width: 120,
-        height: 120
+        width: 360,
+        height: 360
       });
       msgListenerRef = db.ref('chatrooms/' + room + '/messages');
       msgListenerRef.on('child_added', snap => {
