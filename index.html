@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QuePasaApp</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <!-- Favicon optional: <link rel="icon" href="QuePasaLogo.png" /> -->
+</head>
+<body class="splash">
+  <div class="center-container" id="splash-main">
+    <img src="QuePasaLogo.png" alt="QuePasaApp Logo" class="splash-logo">
+  </div>
+  <script>
+    // Navigate to chat page when user taps or clicks anywhere
+    document.getElementById('splash-main').addEventListener('click', function() {
+      window.location.href = 'chat.html';
+    });
+    // Make whole screen clickable (for mobile)
+    document.body.addEventListener('touchstart', function() {
+      window.location.href = 'chat.html';
+    }, { once: true });
+  </script>
+</body>
+</html>
