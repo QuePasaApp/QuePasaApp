@@ -8,23 +8,8 @@
     body {
       font-family: sans-serif;
       margin: 0; padding: 0;
-      /* Tiled QuePasaLogo.png background */
       background: #f3f3f3 url('QuePasaLogo.png') repeat;
       background-size: 320px 320px;
-    }
-    .support-link {
-      position: absolute;
-      left: 50px;
-      top: 40px;
-      font-size: 1.4em;
-      color: #2ecc71;
-      text-decoration: none;
-      font-weight: 600;
-      z-index: 2;
-    }
-    .support-link:hover {
-      text-decoration: underline;
-      color: #198f4d;
     }
     .center-box {
       max-width: 1700px;
@@ -41,10 +26,41 @@
     .top-row {
       display: flex;
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       gap: 110px;
       margin-bottom: 60px;
+      width: 100%;
+    }
+    .logo-box,
+    .qr-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 600px;
+      max-width: 95vw;
+      position: relative;
+    }
+    .cashapp-link {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-size: 1.7em;
+      color: #2ecc71;
+      text-decoration: none;
+      font-weight: 700;
+      background: #fff;
+      padding: 14px 0 9px 0;
+      margin-bottom: 10px;
+      border-radius: 14px 14px 0 0;
+      border-bottom: 2px solid #e0e0e0;
+      letter-spacing: 0.5px;
+      position: relative;
+      z-index: 2;
+    }
+    .cashapp-link:hover {
+      text-decoration: underline;
+      color: #198f4d;
     }
     .logo-img, .qr-img {
       width: 600px;
@@ -57,6 +73,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      margin: 0 auto;
     }
     .room-title {
       margin-bottom: 30px;
@@ -84,6 +101,30 @@
       cursor: pointer;
     }
     .new-room-btn:hover { background: #1e9f4d; }
+    .toggle-autodelete-btn {
+      margin-left: 30px;
+      font-size: 1.1em;
+      background: #fff;
+      color: #e67e22;
+      border: 2px solid #e67e22;
+      border-radius: 12px;
+      padding: 9px 28px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+    .toggle-autodelete-btn.on {
+      background: #e67e22;
+      color: #fff;
+    }
+    .toggle-autodelete-btn:hover {
+      background: #fae5d3;
+      color: #e67e22;
+    }
+    .toggle-autodelete-btn.on:hover {
+      background: #e67e22;
+      color: #fff;
+    }
     .msg-area {
       width: 100%;
       min-height: 600px;
@@ -135,6 +176,7 @@
     @media (max-width: 1600px) {
       .center-box { max-width: 99vw; padding: 4vw 1vw 4vw 1vw; }
       .top-row { flex-direction: column; gap: 40px; }
+      .logo-box, .qr-box { width: 95vw; }
       .logo-img, .qr-img { width: 85vw; height: 85vw; min-width: 180px; min-height: 180px; max-width: 95vw; max-height: 95vw;}
       .msg-area { font-size: 1.5em; min-height: 220px; padding: 10vw 2vw 4vw 2vw; }
       #msgInput { font-size: 1.2em; padding: 7vw; }
@@ -145,15 +187,21 @@
   </style>
 </head>
 <body>
-  <a class="support-link" href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener">Cash App Support</a>
   <div class="center-box">
     <div class="top-row">
-      <img class="logo-img" src="QuePasaLogo.png" alt="Que Pasa Logo" />
-      <div class="qr-img" id="qr"></div>
+      <div class="logo-box">
+        <a class="cashapp-link" href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener">$QuePasaApp</a>
+        <img class="logo-img" src="QuePasaLogo.png" alt="Que Pasa Logo" />
+      </div>
+      <div class="qr-box">
+        <a class="cashapp-link" href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener">$QuePasaApp</a>
+        <div class="qr-img" id="qr"></div>
+      </div>
     </div>
     <div class="room-title">
       Room: <span id="roomId" class="room-id"></span>
       <button class="new-room-btn" id="newRoomBtn">New Room</button>
+      <button class="toggle-autodelete-btn" id="toggleAutoDeleteBtn">Auto Delete: OFF</button>
     </div>
     <div class="msg-area" id="messages"></div>
     <div class="input-row">
@@ -261,14 +309,15 @@
       addMsg(msg.text, msg.sender);
     });
 
-    // Send message
+    // Send message (now with timestamp)
     const msgInput = document.getElementById('msgInput');
     function sendMsg() {
       const text = msgInput.value.trim();
       if (!text) return;
       db.ref('chatrooms/' + room + '/messages').push({
         text: text,
-        sender: myName
+        sender: myName,
+        timestamp: Date.now()
       });
       msgInput.value = '';
     }
@@ -299,6 +348,35 @@
       });
       myName = assignName(room);
     };
+
+    // --- Auto Delete Toggle Logic ---
+    let autoDeleteOn = false;
+    const toggleBtn = document.getElementById('toggleAutoDeleteBtn');
+    function updateToggleBtn() {
+      toggleBtn.classList.toggle('on', autoDeleteOn);
+      toggleBtn.textContent = 'Auto Delete: ' + (autoDeleteOn ? 'ON' : 'OFF');
+    }
+    toggleBtn.onclick = function() {
+      autoDeleteOn = !autoDeleteOn;
+      updateToggleBtn();
+    };
+    updateToggleBtn();
+
+    // Auto-delete function
+    function autoDeleteOldMessages() {
+      if (!autoDeleteOn) return;
+      const messagesRef = db.ref('chatrooms/' + room + '/messages');
+      const now = Date.now();
+      messagesRef.once('value', function(snapshot) {
+        snapshot.forEach(function(child) {
+          const msg = child.val();
+          if (msg.timestamp && now - msg.timestamp > 10000) {
+            messagesRef.child(child.key).remove();
+          }
+        });
+      });
+    }
+    setInterval(autoDeleteOldMessages, 2000);
   </script>
 </body>
 </html>
