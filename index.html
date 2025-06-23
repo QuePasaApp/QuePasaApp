@@ -79,8 +79,16 @@
       box-shadow: 0 0 0 3000px #000b, 0 6px 48px #111a;
       border: 6px solid #2ecc71;
     }
+    /* Room controls alignment */
+    .room-controls-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 12px;
+    }
     .room-title {
-      margin-bottom: 32px;
       font-size: 4.1em;
       font-weight: 800;
       color: #111;
@@ -90,6 +98,7 @@
       align-items: center;
       gap: 18px;
       justify-content: center;
+      margin-bottom: 0;
     }
     .room-id {
       color: #2ecc71;
@@ -107,17 +116,47 @@
       padding: 20px 70px;
       font-weight: bold;
       cursor: pointer;
-      margin-left: 12px;
       transition: background 0.2s;
+      margin: 0;
     }
     .new-room-btn:hover { background: #1e9f4d; }
     .clear-chat-btn {
       background: #e74c3c;
-      margin-left: 12px;
+      margin-left: 0;
     }
     .clear-chat-btn:hover {
       background: #c0392b;
     }
+    .room-key-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 32px;
+      font-size:2.3em;
+    }
+    #roomKeyInput {
+      padding: 18px 38px;
+      border-radius: 18px;
+      border: 3px solid #2ecc71;
+      font-size:1em;
+      width:340px;
+      max-width: 60vw;
+      text-align:center;
+    }
+    #goRoomBtn {
+      font-size:1em;
+      background:#2ecc71;
+      color:#fff;
+      border:none;
+      border-radius:15px;
+      padding:18px 38px;
+      font-weight:bold;
+      cursor:pointer;
+      transition: background 0.2s;
+    }
+    #goRoomBtn:hover { background: #1e9f4d; }
     .msg-area {
       width: 100%;
       min-height: 500px;
@@ -245,6 +284,9 @@
       #msgInput { font-size: 1.3em; padding: 3vw; border-radius: 10px;}
       #sendBtn { font-size: 1.2em; padding: 3vw 5vw; border-radius: 10px;}
       .new-room-btn, .clear-chat-btn { font-size: 1.2em; padding: 1.4vw 6vw; border-radius: 12px;}
+      .room-key-row { font-size: 1.2em;}
+      #roomKeyInput { padding: 2vw 5vw; border-radius: 8px; font-size: 1em;}
+      #goRoomBtn { padding: 2vw 5vw; border-radius: 8px;}
     }
     @media (max-width: 600px) {
       .qr-img, .logo-img, .cashapp-img { min-width: 80px; min-height: 80px; }
@@ -286,10 +328,20 @@
         <div class="img-label">Room QR</div>
       </div>
     </div>
-    <div class="room-title">
-      Room: <span id="roomId" class="room-id"></span>
+    <div class="room-controls-row">
+      <div class="room-title">
+        Room: <span id="roomId" class="room-id"></span>
+      </div>
       <button class="new-room-btn" id="newRoomBtn">New Room</button>
       <button class="clear-chat-btn" id="clearChatBtn">Clear Chat</button>
+    </div>
+    <div class="room-key-row">
+      <input
+        id="roomKeyInput"
+        type="text"
+        placeholder="Insert room key"
+      >
+      <button id="goRoomBtn">Go to Room</button>
     </div>
     <div class="msg-area" id="messages"></div>
     <div class="input-row">
@@ -433,6 +485,16 @@
         document.getElementById('messages').innerHTML = "";
       }
     };
+
+    // Insert room key logic
+    document.getElementById('goRoomBtn').onclick = function() {
+      var val = document.getElementById('roomKeyInput').value.trim().toUpperCase();
+      if (!val) return;
+      window.location.search = '?room=' + encodeURIComponent(val);
+    };
+    document.getElementById('roomKeyInput').addEventListener('keydown', function(e){
+      if (e.key === 'Enter') document.getElementById('goRoomBtn').click();
+    });
 
     function setupInteractiveEnlarge(id) {
       const el = document.getElementById(id);
