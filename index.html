@@ -5,19 +5,24 @@
   <title>Que Pasa App</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
     body {
       font-family: sans-serif;
-      margin: 0; padding: 0;
       background: #f3f3f3 url('QuePasaLogo.png') repeat;
       background-size: 320px 320px;
+      min-height: 100vh;
     }
     .center-box {
       max-width: 1700px;
-      margin: 90px auto 0 auto;
+      margin: 60px auto 0 auto;
       background: #fff;
-      border-radius: 48px;
-      box-shadow: 0 12px 48px #0001;
-      padding: 100px 48px 60px 48px;
+      border-radius: 28px;
+      box-shadow: 0 8px 32px #0001;
+      padding: 40px 24px 20px 24px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -28,16 +33,15 @@
       flex-direction: row;
       align-items: flex-start;
       justify-content: center;
-      gap: 110px;
-      margin-bottom: 60px;
+      gap: 50px;
+      margin-bottom: 36px;
       width: 100%;
     }
-    .logo-box,
-    .qr-box {
+    .logo-box, .qr-box {
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 600px;
+      width: 400px;
       max-width: 95vw;
       position: relative;
     }
@@ -45,14 +49,14 @@
       display: block;
       width: 100%;
       text-align: center;
-      font-size: 1.7em;
+      font-size: 1.4em;
       color: #2ecc71;
       text-decoration: none;
       font-weight: 700;
       background: #fff;
-      padding: 14px 0 9px 0;
-      margin-bottom: 10px;
-      border-radius: 14px 14px 0 0;
+      padding: 10px 0 7px 0;
+      margin-bottom: 8px;
+      border-radius: 10px 10px 0 0;
       border-bottom: 2px solid #e0e0e0;
       letter-spacing: 0.5px;
       position: relative;
@@ -63,82 +67,81 @@
       color: #198f4d;
     }
     .logo-img, .qr-img {
-      width: 600px;
-      height: 600px;
+      width: 340px;
+      height: 340px;
       object-fit: contain;
-      border-radius: 36px;
+      border-radius: 18px;
       background: #f8f8f8;
-      border: 3px solid #eee;
-      box-shadow: 0 3px 32px #2221;
+      border: 2px solid #eee;
+      box-shadow: 0 2px 18px #2221;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto;
+      max-width: 85vw;
+      max-height: 85vw;
     }
     .room-title {
-      margin-bottom: 30px;
-      font-size: 2.6em;
+      margin-bottom: 20px;
+      font-size: 2em;
       font-weight: 700;
       color: #111;
       text-align: center;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
     }
     .room-id {
       color: #2ecc71;
       font-family: monospace;
-      font-size: 2.2em;
-      margin-left: 10px;
+      font-size: 1.15em;
+      margin-left: 2px;
       word-break: break-all;
     }
     .new-room-btn {
-      margin-left: 30px;
-      font-size: 1.5em;
+      font-size: 1em;
       background: #2ecc71;
       color: #fff;
       border: none;
-      border-radius: 16px;
-      padding: 12px 40px;
+      border-radius: 12px;
+      padding: 8px 22px;
       font-weight: bold;
       cursor: pointer;
+      margin-left: 4px;
     }
     .new-room-btn:hover { background: #1e9f4d; }
-    .toggle-autodelete-btn {
-      margin-left: 30px;
-      font-size: 1.1em;
-      background: #fff;
-      color: #e67e22;
-      border: 2px solid #e67e22;
+    .clear-chat-btn {
+      font-size: 1em;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
       border-radius: 12px;
-      padding: 9px 28px;
+      padding: 8px 22px;
       font-weight: bold;
       cursor: pointer;
-      transition: background .2s, color .2s;
+      margin-left: 4px;
+      transition: background 0.2s;
     }
-    .toggle-autodelete-btn.on {
-      background: #e67e22;
-      color: #fff;
-    }
-    .toggle-autodelete-btn:hover {
-      background: #fae5d3;
-      color: #e67e22;
-    }
-    .toggle-autodelete-btn.on:hover {
-      background: #e67e22;
-      color: #fff;
+    .clear-chat-btn:hover {
+      background: #c0392b;
     }
     .msg-area {
       width: 100%;
-      min-height: 600px;
+      min-height: 220px;
       background: #fafafa;
-      border: 3px solid #eee;
-      border-radius: 32px;
-      margin-bottom: 28px;
-      padding: 32px 28px 12px 28px;
+      border: 2px solid #eee;
+      border-radius: 18px;
+      margin-bottom: 16px;
+      padding: 18px 10px 8px 12px;
       overflow-y: auto;
-      font-size: 2.7em;
-      max-height: 850px;
+      font-size: 1.3em;
+      max-height: 300px;
+      word-break: break-word;
     }
     .msg {
-      margin-bottom: 32px;
+      margin-bottom: 18px;
       word-break: break-word;
     }
     .sender {
@@ -151,21 +154,22 @@
     .input-row {
       display: flex;
       width: 100%;
-      gap: 24px;
+      gap: 10px;
+      margin-bottom: 5px;
     }
     #msgInput {
       flex: 1;
-      font-size: 2.3em;
-      padding: 28px;
-      border-radius: 20px;
-      border: 3px solid #ddd;
+      font-size: 1em;
+      padding: 10px;
+      border-radius: 10px;
+      border: 2px solid #ddd;
       outline: none;
       background: #f7f7f7;
     }
     #sendBtn {
-      font-size: 2em;
-      padding: 18px 60px;
-      border-radius: 20px;
+      font-size: 1em;
+      padding: 10px 23px;
+      border-radius: 10px;
       border: none;
       background: #2ecc71;
       color: #fff;
@@ -173,16 +177,30 @@
       font-weight: bold;
     }
     #sendBtn:hover { background: #1e9f4d; }
-    @media (max-width: 1600px) {
-      .center-box { max-width: 99vw; padding: 4vw 1vw 4vw 1vw; }
-      .top-row { flex-direction: column; gap: 40px; }
-      .logo-box, .qr-box { width: 95vw; }
-      .logo-img, .qr-img { width: 85vw; height: 85vw; min-width: 180px; min-height: 180px; max-width: 95vw; max-height: 95vw;}
-      .msg-area { font-size: 1.5em; min-height: 220px; padding: 10vw 2vw 4vw 2vw; }
-      #msgInput { font-size: 1.2em; padding: 7vw; }
-      #sendBtn { font-size: 1.1em; padding: 3vw 5vw; }
-      .room-title { font-size: 1.5em; }
+    @media (max-width: 900px) {
+      .center-box { max-width: 98vw; padding: 2vw 2vw 2vw 2vw; border-radius: 12px; }
+      .top-row { flex-direction: column; gap: 20px; }
+      .logo-box, .qr-box { width: 100%; }
+      .logo-img, .qr-img { width: 80vw; height: 80vw; min-width: 120px; min-height: 120px; max-width: 92vw; max-height: 92vw;}
+      .room-title { font-size: 1.12em; }
       .room-id { font-size: 1em; }
+      .msg-area { font-size: 1.04em; min-height: 100px; max-height: 170px; padding: 8px 2vw 6px 2vw; }
+      #msgInput { font-size: 1.05em; padding: 3vw; }
+      #sendBtn { font-size: 1.05em; padding: 2vw 5vw; }
+      .new-room-btn, .clear-chat-btn { font-size: 0.97em; padding: 7px 12px; }
+    }
+    @media (max-width: 500px) {
+      .center-box { padding: 4vw 1vw 2vw 1vw; }
+      .logo-img, .qr-img {
+        width: 98vw;
+        height: 98vw;
+        min-width: 66px;
+        min-height: 66px;
+        max-width: 99vw;
+        max-height: 99vw;
+      }
+      .msg-area { padding: 7px 2px 5px 4px; }
+      .room-title { flex-direction: column; gap: 5px;}
     }
   </style>
 </head>
@@ -201,7 +219,7 @@
     <div class="room-title">
       Room: <span id="roomId" class="room-id"></span>
       <button class="new-room-btn" id="newRoomBtn">New Room</button>
-      <button class="toggle-autodelete-btn" id="toggleAutoDeleteBtn">Auto Delete: OFF</button>
+      <button class="clear-chat-btn" id="clearChatBtn">Clear Chat</button>
     </div>
     <div class="msg-area" id="messages"></div>
     <div class="input-row">
@@ -281,14 +299,20 @@
     document.getElementById('roomId').textContent = room;
     let myName = assignName(room);
 
-    // QR for join URL
-    let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
-    document.getElementById('qr').innerHTML = "";
-    new QRCode(document.getElementById('qr'), {
-      text: joinUrl,
-      width: 600,
-      height: 600
-    });
+    // Responsive QR
+    function renderQR() {
+      let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
+      let qrSize = 340;
+      if (window.innerWidth < 500) qrSize = Math.floor(window.innerWidth * 0.85);
+      document.getElementById('qr').innerHTML = "";
+      new QRCode(document.getElementById('qr'), {
+        text: joinUrl,
+        width: qrSize,
+        height: qrSize
+      });
+    }
+    renderQR();
+    window.addEventListener('resize', renderQR);
 
     // Messages logic
     const messagesDiv = document.getElementById('messages');
@@ -309,15 +333,14 @@
       addMsg(msg.text, msg.sender);
     });
 
-    // Send message (now with timestamp)
+    // Send message
     const msgInput = document.getElementById('msgInput');
     function sendMsg() {
       const text = msgInput.value.trim();
       if (!text) return;
       db.ref('chatrooms/' + room + '/messages').push({
         text: text,
-        sender: myName,
-        timestamp: Date.now()
+        sender: myName
       });
       msgInput.value = '';
     }
@@ -334,13 +357,7 @@
       setRoomInUrl(room);
       document.getElementById('roomId').textContent = room;
       document.getElementById('messages').innerHTML = "";
-      joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
-      document.getElementById('qr').innerHTML = "";
-      new QRCode(document.getElementById('qr'), {
-        text: joinUrl,
-        width: 600,
-        height: 600
-      });
+      renderQR();
       msgListenerRef = db.ref('chatrooms/' + room + '/messages');
       msgListenerRef.on('child_added', snap => {
         const msg = snap.val();
@@ -349,34 +366,13 @@
       myName = assignName(room);
     };
 
-    // --- Auto Delete Toggle Logic ---
-    let autoDeleteOn = false;
-    const toggleBtn = document.getElementById('toggleAutoDeleteBtn');
-    function updateToggleBtn() {
-      toggleBtn.classList.toggle('on', autoDeleteOn);
-      toggleBtn.textContent = 'Auto Delete: ' + (autoDeleteOn ? 'ON' : 'OFF');
-    }
-    toggleBtn.onclick = function() {
-      autoDeleteOn = !autoDeleteOn;
-      updateToggleBtn();
+    // Clear chat button logic
+    document.getElementById('clearChatBtn').onclick = function() {
+      if (confirm("Are you sure you want to clear the chat for everyone in this room? This cannot be undone.")) {
+        db.ref('chatrooms/' + room + '/messages').remove();
+        document.getElementById('messages').innerHTML = "";
+      }
     };
-    updateToggleBtn();
-
-    // Auto-delete function
-    function autoDeleteOldMessages() {
-      if (!autoDeleteOn) return;
-      const messagesRef = db.ref('chatrooms/' + room + '/messages');
-      const now = Date.now();
-      messagesRef.once('value', function(snapshot) {
-        snapshot.forEach(function(child) {
-          const msg = child.val();
-          if (msg.timestamp && now - msg.timestamp > 10000) {
-            messagesRef.child(child.key).remove();
-          }
-        });
-      });
-    }
-    setInterval(autoDeleteOldMessages, 2000);
   </script>
 </body>
 </html>
