@@ -6,23 +6,19 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
     html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: sans-serif;
+      margin: 0; padding: 0; height: 100%;
+      font-family: 'Segoe UI', Arial, sans-serif;
       background: #f3f3f3 url('QuePasaLogo.png') repeat;
       background-size: 320px 320px;
       min-height: 100vh;
     }
     .center-box {
-      max-width: 1700px;
-      margin: 60px auto 0 auto;
+      max-width: 1100px;
+      margin: 32px auto 0 auto;
       background: #fff;
-      border-radius: 28px;
+      border-radius: 20px;
       box-shadow: 0 8px 32px #0001;
-      padding: 40px 24px 20px 24px;
+      padding: 20px 10px 10px 10px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -31,117 +27,112 @@
     .top-row {
       display: flex;
       flex-direction: row;
-      align-items: flex-start;
       justify-content: center;
-      gap: 50px;
-      margin-bottom: 36px;
+      align-items: center;
+      gap: 18px;
       width: 100%;
+      margin-bottom: 20px;
     }
-    .logo-box, .qr-box {
+    .qr-col, .logo-col, .cashapp-col {
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 400px;
-      max-width: 95vw;
-      position: relative;
+      flex: 1 1 0;
+      min-width: 0;
     }
-    .cashapp-link {
-      display: block;
-      width: 100%;
-      text-align: center;
-      font-size: 1.4em;
-      color: #2ecc71;
-      text-decoration: none;
-      font-weight: 700;
-      background: #fff;
-      padding: 10px 0 7px 0;
-      margin-bottom: 8px;
-      border-radius: 10px 10px 0 0;
-      border-bottom: 2px solid #e0e0e0;
-      letter-spacing: 0.5px;
-      position: relative;
-      z-index: 2;
-    }
-    .cashapp-link:hover {
-      text-decoration: underline;
-      color: #198f4d;
-    }
-    .logo-img, .qr-img {
-      width: 340px;
-      height: 340px;
+    .qr-img, .logo-img, .cashapp-img {
+      width: 110px;
+      height: 110px;
       object-fit: contain;
-      border-radius: 18px;
+      border-radius: 16px;
       background: #f8f8f8;
       border: 2px solid #eee;
-      box-shadow: 0 2px 18px #2221;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto;
-      max-width: 85vw;
-      max-height: 85vw;
+      box-shadow: 0 2px 8px #2221;
+      margin-bottom: 5px;
+      transition: box-shadow .2s, transform .2s;
+      cursor: pointer;
+      display: block;
+      background-size: cover;
+      background-position: center;
+    }
+    .cashapp-img {
+      background: #222;
+      border: 2px solid #2ecc71;
+    }
+    .img-label {
+      font-size: 0.98em;
+      color: #888;
+      text-align: center;
+    }
+    .interactive-img.enlarged {
+      position: fixed !important;
+      z-index: 1111;
+      left: 50% !important;
+      top: 50% !important;
+      transform: translate(-50%,-50%) scale(1.7) !important;
+      width: 90vw !important;
+      height: 90vw !important;
+      max-width: 98vw !important;
+      max-height: 95vh !important;
+      background: #fff;
+      box-shadow: 0 0 0 3000px #0009, 0 6px 48px #111a;
+      border: 3px solid #2ecc71;
     }
     .room-title {
-      margin-bottom: 20px;
-      font-size: 2em;
+      margin-bottom: 14px;
+      font-size: 1.25em;
       font-weight: 700;
       color: #111;
       text-align: center;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 10px;
+      gap: 7px;
       justify-content: center;
     }
     .room-id {
       color: #2ecc71;
       font-family: monospace;
-      font-size: 1.15em;
+      font-size: 1em;
       margin-left: 2px;
       word-break: break-all;
     }
-    .new-room-btn {
+    .new-room-btn, .clear-chat-btn {
       font-size: 1em;
       background: #2ecc71;
       color: #fff;
       border: none;
-      border-radius: 12px;
-      padding: 8px 22px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-left: 4px;
-    }
-    .new-room-btn:hover { background: #1e9f4d; }
-    .clear-chat-btn {
-      font-size: 1em;
-      background: #e74c3c;
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      padding: 8px 22px;
+      border-radius: 11px;
+      padding: 7px 16px;
       font-weight: bold;
       cursor: pointer;
       margin-left: 4px;
       transition: background 0.2s;
+    }
+    .new-room-btn:hover { background: #1e9f4d; }
+    .clear-chat-btn {
+      background: #e74c3c;
+      margin-left: 4px;
     }
     .clear-chat-btn:hover {
       background: #c0392b;
     }
     .msg-area {
       width: 100%;
-      min-height: 220px;
+      min-height: 100px;
       background: #fafafa;
       border: 2px solid #eee;
-      border-radius: 18px;
-      margin-bottom: 16px;
-      padding: 18px 10px 8px 12px;
+      border-radius: 13px;
+      margin-bottom: 10px;
+      padding: 11px 7px 6px 7px;
       overflow-y: auto;
-      font-size: 1.3em;
-      max-height: 300px;
+      font-size: 1em;
+      max-height: 210px;
       word-break: break-word;
+      box-sizing: border-box;
     }
     .msg {
-      margin-bottom: 18px;
+      margin-bottom: 11px;
       word-break: break-word;
     }
     .sender {
@@ -154,22 +145,22 @@
     .input-row {
       display: flex;
       width: 100%;
-      gap: 10px;
-      margin-bottom: 5px;
+      gap: 7px;
+      margin-bottom: 2px;
     }
     #msgInput {
       flex: 1;
       font-size: 1em;
-      padding: 10px;
-      border-radius: 10px;
+      padding: 7px;
+      border-radius: 8px;
       border: 2px solid #ddd;
       outline: none;
       background: #f7f7f7;
     }
     #sendBtn {
       font-size: 1em;
-      padding: 10px 23px;
-      border-radius: 10px;
+      padding: 7px 14px;
+      border-radius: 8px;
       border: none;
       background: #2ecc71;
       color: #fff;
@@ -177,43 +168,116 @@
       font-weight: bold;
     }
     #sendBtn:hover { background: #1e9f4d; }
-    @media (max-width: 900px) {
-      .center-box { max-width: 98vw; padding: 2vw 2vw 2vw 2vw; border-radius: 12px; }
-      .top-row { flex-direction: column; gap: 20px; }
-      .logo-box, .qr-box { width: 100%; }
-      .logo-img, .qr-img { width: 80vw; height: 80vw; min-width: 120px; min-height: 120px; max-width: 92vw; max-height: 92vw;}
-      .room-title { font-size: 1.12em; }
-      .room-id { font-size: 1em; }
-      .msg-area { font-size: 1.04em; min-height: 100px; max-height: 170px; padding: 8px 2vw 6px 2vw; }
-      #msgInput { font-size: 1.05em; padding: 3vw; }
-      #sendBtn { font-size: 1.05em; padding: 2vw 5vw; }
-      .new-room-btn, .clear-chat-btn { font-size: 0.97em; padding: 7px 12px; }
+    /* Help (How to use) icon and tooltip */
+    .help-icon {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #fff;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      font-size: 1em;
+      color: #2ecc71;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px #0002;
+      cursor: pointer;
+      z-index: 20;
+      border: 2px solid #2ecc71;
+      transition: background 0.18s, color 0.18s;
     }
-    @media (max-width: 500px) {
-      .center-box { padding: 4vw 1vw 2vw 1vw; }
-      .logo-img, .qr-img {
-        width: 98vw;
-        height: 98vw;
-        min-width: 66px;
-        min-height: 66px;
-        max-width: 99vw;
-        max-height: 99vw;
+    .help-icon:active,
+    .help-icon:focus,
+    .help-icon:hover { background: #2ecc71; color: #fff; outline: none;}
+    .help-tooltip {
+      position: fixed;
+      top: 32px;
+      right: 7px;
+      width: 220px;
+      max-width: 96vw;
+      background: #fff;
+      color: #222;
+      font-size: 0.95em;
+      border-radius: 9px;
+      box-shadow: 0 6px 32px #2223;
+      padding: 11px 8px 7px 8px;
+      z-index: 99;
+      display: none;
+      animation: fadeInHelp 0.18s;
+      line-height: 1.5;
+    }
+    @keyframes fadeInHelp {
+      from { opacity: 0; transform: translateY(-11px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .help-tooltip ul {
+      padding-left: 19px;
+      margin: 4px 0 0 0;
+    }
+    .close-tooltip {
+      position: absolute;
+      top: 4px;
+      right: 8px;
+      color: #e74c3c;
+      font-size: 1.12em;
+      cursor: pointer;
+      font-weight: bold;
+      transition: color .17s;
+    }
+    .close-tooltip:hover { color: #c0392b; }
+    @media (max-width: 700px) {
+      .center-box { max-width: 99vw; padding: 2vw 2vw 2vw 2vw; border-radius: 8px; }
+      .top-row { flex-direction: column; gap: 8px; }
+      .qr-col, .logo-col, .cashapp-col { width: 100%; }
+      .qr-img, .logo-img, .cashapp-img {
+        width: 60vw;
+        height: 60vw;
+        min-width: 50px; min-height: 50px;
+        max-width: 88vw; max-height: 88vw;
       }
-      .msg-area { padding: 7px 2px 5px 4px; }
-      .room-title { flex-direction: column; gap: 5px;}
+      .room-title { font-size: 1em; }
+      .room-id { font-size: 1em; }
+      .msg-area { font-size: 1em; min-height: 50px; max-height: 110px; padding: 6px 2vw 4px 2vw; }
+      #msgInput { font-size: 1em; padding: 2vw; }
+      #sendBtn { font-size: 1em; padding: 2vw 5vw; }
+      .new-room-btn, .clear-chat-btn { font-size: 0.92em; padding: 6px 9px; }
+      .help-tooltip { top: 25px; right: 3px; font-size: .93em; padding:7px 3px 5px 5px; width: 96vw; max-width: 97vw;}
+      .help-icon { width: 19px; height: 19px; font-size: .75em; top: 4px; right: 4px;}
     }
   </style>
 </head>
 <body>
   <div class="center-box">
+    <!-- Help icon and tooltip -->
+    <div class="help-icon" id="helpIcon" tabindex="0" aria-label="How to use">ℹ️</div>
+    <div class="help-tooltip" id="helpTooltip">
+      <b>How to use Que Pasa App:</b>
+      <ul>
+        <li>Share your room code or QR so friends can join.</li>
+        <li>Type a message and hit "Send".</li>
+        <li>Use "New Room" to start a fresh chat.</li>
+        <li>Use "Clear Chat" to erase all messages in this room (for everyone).</li>
+        <li>Tap the Cash App image to tip/support.</li>
+        <li>Tap QR or logo to enlarge for scanning/viewing. Double tap or tap again to shrink.</li>
+      </ul>
+      <span class="close-tooltip" id="closeTooltipBtn">&times;</span>
+    </div>
     <div class="top-row">
-      <div class="logo-box">
-        <a class="cashapp-link" href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener">$QuePasaApp</a>
-        <img class="logo-img" src="QuePasaLogo.png" alt="Que Pasa Logo" />
+      <div class="qr-col">
+        <div class="qr-img interactive-img" id="qr"></div>
+        <div class="img-label">Room QR</div>
       </div>
-      <div class="qr-box">
-        <a class="cashapp-link" href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener">$QuePasaApp</a>
-        <div class="qr-img" id="qr"></div>
+      <div class="logo-col">
+        <img src="QuePasaLogo.png" alt="Que Pasa Logo" class="logo-img interactive-img" id="mainLogo" />
+        <div class="img-label">Que Pasa App</div>
+      </div>
+      <div class="cashapp-col">
+        <a href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener">
+          <img src="QuePasaAppCashApp.jpg" alt="Cash App" class="cashapp-img interactive-img" id="cashAppImg" />
+        </a>
+        <div class="img-label">Tip on Cash App</div>
       </div>
     </div>
     <div class="room-title">
@@ -233,7 +297,7 @@
   <!-- QR Code JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    // Firebase config (from your setup)
+    // Firebase config
     var firebaseConfig = {
       apiKey: "AIzaSyDj9I6Rt64jHqA0AhhVQtHDshz5v03s3x8",
       authDomain: "quepasaapp-8c246.firebaseapp.com",
@@ -302,8 +366,9 @@
     // Responsive QR
     function renderQR() {
       let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
-      let qrSize = 340;
-      if (window.innerWidth < 500) qrSize = Math.floor(window.innerWidth * 0.85);
+      let qrSize = 110;
+      if (window.innerWidth < 700) qrSize = Math.floor(window.innerWidth * 0.6);
+      if (window.innerWidth < 400) qrSize = Math.floor(window.innerWidth * 0.8);
       document.getElementById('qr').innerHTML = "";
       new QRCode(document.getElementById('qr'), {
         text: joinUrl,
@@ -373,6 +438,63 @@
         document.getElementById('messages').innerHTML = "";
       }
     };
+
+    // --- Interactive enlarge for QR and Logo ---
+    function setupInteractiveEnlarge(id) {
+      const el = document.getElementById(id);
+      let lastTapTime = 0;
+      el.addEventListener('click', function(e) {
+        const now = Date.now();
+        if(el.classList.contains('enlarged')) {
+          el.classList.remove('enlarged');
+          return;
+        }
+        if(now - lastTapTime < 400) {
+          el.classList.remove('enlarged');
+          lastTapTime = 0;
+        } else {
+          document.querySelectorAll('.interactive-img.enlarged').forEach(x => x.classList.remove('enlarged'));
+          el.classList.add('enlarged');
+          lastTapTime = now;
+        }
+      });
+      document.addEventListener('mousedown', function(e){
+        if(el.classList.contains('enlarged') && !el.contains(e.target)) {
+          el.classList.remove('enlarged');
+        }
+      });
+    }
+    setupInteractiveEnlarge('qr');
+    setupInteractiveEnlarge('mainLogo');
+
+    // --- Help tooltip logic ---
+    const helpIcon = document.getElementById('helpIcon');
+    const helpTooltip = document.getElementById('helpTooltip');
+    const closeTooltipBtn = document.getElementById('closeTooltipBtn');
+    function showTooltip() { helpTooltip.style.display = 'block'; }
+    function hideTooltip() { helpTooltip.style.display = 'none'; }
+    function isMobile() {
+      return window.innerWidth <= 700 || 'ontouchstart' in window;
+    }
+    helpIcon.addEventListener('mouseenter', () => { if (!isMobile()) showTooltip(); });
+    helpIcon.addEventListener('mouseleave', () => { if (!isMobile()) hideTooltip(); });
+    helpIcon.addEventListener('click', () => {
+      if (isMobile()) {
+        if (helpTooltip.style.display === 'block') {
+          hideTooltip();
+        } else {
+          showTooltip();
+        }
+      }
+    });
+    closeTooltipBtn.addEventListener('click', hideTooltip);
+    document.addEventListener('mousedown', function(e){
+      if(helpTooltip.style.display === 'block'
+        && !helpTooltip.contains(e.target)
+        && !helpIcon.contains(e.target)) {
+        hideTooltip();
+      }
+    });
   </script>
 </body>
 </html>
