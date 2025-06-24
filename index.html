@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Que Pasa App</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <!-- Favicon for browser tab -->
   <link rel="icon" type="image/png" href="QuePasaLogo.png">
   <style>
     html, body {
@@ -81,7 +80,6 @@
       box-shadow: 0 0 0 3000px #000b, 0 6px 48px #111a;
       border: 6px solid #2ecc71;
     }
-    /* Room controls alignment */
     .room-controls-row {
       display: flex;
       flex-direction: row;
@@ -126,9 +124,7 @@
       background: #e74c3c;
       margin-left: 0;
     }
-    .clear-chat-btn:hover {
-      background: #c0392b;
-    }
+    .clear-chat-btn:hover { background: #c0392b; }
     .room-key-row {
       display: flex;
       flex-direction: row;
@@ -298,7 +294,6 @@
 </head>
 <body>
   <div class="center-box">
-    <!-- Help icon and tooltip -->
     <div class="help-icon" id="helpIcon" tabindex="0" aria-label="How to use">ℹ️</div>
     <div class="help-tooltip" id="helpTooltip">
       <b>How to use Que Pasa App:</b>
@@ -338,11 +333,7 @@
       <button class="clear-chat-btn" id="clearChatBtn">Clear Chat</button>
     </div>
     <div class="room-key-row">
-      <input
-        id="roomKeyInput"
-        type="text"
-        placeholder="Insert room key"
-      >
+      <input id="roomKeyInput" type="text" placeholder="Insert room key">
       <button id="goRoomBtn">Go to Room</button>
     </div>
     <div class="msg-area" id="messages"></div>
@@ -416,6 +407,7 @@
     document.getElementById('roomId').textContent = room;
     let myName = assignName(room);
 
+    // QR code rendering with logo overlay
     function renderQR() {
       let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
       let qrSize = 420;
@@ -423,11 +415,46 @@
       if (window.innerWidth < 900) qrSize = Math.floor(window.innerWidth * 0.92);
       if (qrSize < 80) qrSize = 80;
       document.getElementById('qr').innerHTML = "";
-      new QRCode(document.getElementById('qr'), {
+
+      // Temporary div for QRCode.js
+      const tempDiv = document.createElement('div');
+      document.getElementById('qr').appendChild(tempDiv);
+
+      // High error correction for logo
+      new QRCode(tempDiv, {
         text: joinUrl,
         width: qrSize,
-        height: qrSize
+        height: qrSize,
+        correctLevel: QRCode.CorrectLevel.H
       });
+
+      setTimeout(() => {
+        let qrImg = tempDiv.querySelector('img') || tempDiv.querySelector('canvas');
+        if (!qrImg) return;
+        let canvas = document.createElement('canvas');
+        canvas.width = qrSize;
+        canvas.height = qrSize;
+        let ctx = canvas.getContext('2d');
+        if (qrImg.tagName === 'IMG') {
+          ctx.drawImage(qrImg, 0, 0, qrSize, qrSize);
+        } else {
+          ctx.drawImage(qrImg, 0, 0);
+        }
+        let logo = new Image();
+        logo.src = 'QuePasaLogo.png';
+        logo.onload = function() {
+          let logoSize = qrSize * 0.22;
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(qrSize / 2, qrSize / 2, logoSize / 2 + 8, 0, 2 * Math.PI, false);
+          ctx.fillStyle = "#fff";
+          ctx.fill();
+          ctx.restore();
+          ctx.drawImage(logo, (qrSize - logoSize) / 2, (qrSize - logoSize) / 2, logoSize, logoSize);
+          document.getElementById('qr').innerHTML = "";
+          document.getElementById('qr').appendChild(canvas);
+        };
+      }, 100);
     }
     renderQR();
     window.addEventListener('resize', renderQR);
@@ -488,7 +515,6 @@
       }
     };
 
-    // Insert room key logic
     document.getElementById('goRoomBtn').onclick = function() {
       var val = document.getElementById('roomKeyInput').value.trim().toUpperCase();
       if (!val) return;
