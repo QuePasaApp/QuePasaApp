@@ -26,117 +26,70 @@
       align-items: center;
       position: relative;
     }
-    /* ... rest of your CSS unchanged ... */
-    .top-row {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      gap: 90px;
-      width: 100%;
-      margin-bottom: 60px;
-    }
-    .qr-col, .logo-col, .cashapp-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex: 1 1 0;
-      min-width: 0;
-    }
-    .qr-img, .logo-img, .cashapp-img {
-      width: 420px;
-      height: 420px;
-      object-fit: contain;
-      border-radius: 50px;
-      background: #f8f8f8;
-      border: 5px solid #eee;
-      box-shadow: 0 6px 36px #2222;
-      margin-bottom: 18px;
-      transition: box-shadow .2s, transform .2s;
-      cursor: pointer;
-      display: block;
-      background-size: cover;
-      background-position: center;
-    }
-    .cashapp-img {
-      background: #222;
-      border: 5px solid #2ecc71;
-    }
-    .img-label {
-      font-size: 2.7em;
-      color: #888;
-      text-align: center;
-      margin-top: 12px;
-    }
-    .interactive-img.enlarged {
-      position: fixed !important;
-      z-index: 1111;
-      left: 50% !important;
-      top: 50% !important;
-      transform: translate(-50%,-50%) scale(1.3) !important;
-      width: 85vw !important;
-      height: 85vw !important;
-      max-width: 98vw !important;
-      max-height: 95vh !important;
-      background: #fff;
-      box-shadow: 0 0 0 3000px #000b, 0 6px 48px #111a;
-      border: 6px solid #2ecc71;
-    }
     /* How-to instructions block */
     .howto-section {
-      width: 100%;
+      position: absolute;
+      top: 24px;
+      left: 24px;
       background: #eafbe8;
       border: 2px solid #2ecc71;
-      border-radius: 30px;
-      margin-bottom: 35px;
-      margin-top: 12px;
-      padding: 30px 25px 25px 25px;
+      border-radius: 18px;
+      padding: 18px 28px 16px 28px;
       box-sizing: border-box;
-      text-align: center;
-      font-size: 2em;
+      text-align: left;
+      font-size: 1.3em;
       color: #222;
-      box-shadow: 0 4px 24px #2ecc7130;
+      box-shadow: 0 2px 14px #2ecc7130;
+      min-width: 270px;
+      max-width: 350px;
+      z-index: 50;
     }
     .howto-section h2 {
-      margin: 0 0 12px 0;
-      font-size: 1.3em;
+      margin: 0 0 10px 0;
+      font-size: 1.05em;
       color: #229e51;
-      font-weight: 900;
+      font-weight: 800;
     }
     .howto-section ul {
-      text-align: left;
-      display: inline-block;
-      margin: 10px auto 0 auto;
-      padding-left: 24px;
-      font-size: 0.8em;
+      margin: 8px 0 0 0;
+      padding-left: 18px;
+      font-size: 0.96em;
       color: #222;
     }
     .howto-section li {
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
     .howto-section .howto-icon {
-      font-size: 1.5em;
+      font-size: 1.2em;
       vertical-align: middle;
       margin-right: 6px;
     }
     @media (max-width: 900px) {
-      .howto-section { font-size: 1.1em; padding: 5vw 3vw 5vw 3vw; }
+      .howto-section {
+        font-size: 1em;
+        padding: 10px 7px 10px 12px;
+        min-width: 155px;
+        max-width: 95vw;
+        left: 7px;
+        top: 7px;
+      }
       .howto-section ul { font-size: 1em; }
     }
     @media (max-width: 600px) {
       .howto-section { font-size: 0.93em; }
     }
     /* ...rest of your CSS unchanged... */
+    /* Make sure .center-box is position:relative for the absolute positioning to work */
   </style>
 </head>
 <body>
   <div class="center-box">
-    <!-- How-To Section (not floating, appears near the top) -->
+    <!-- How-To Section (top left, not floating, always visible) -->
     <div class="howto-section" id="howToSection">
       <h2><span class="howto-icon">❓</span>How to Add to Home Screen</h2>
-      <div style="font-size:1em;margin-bottom:14px;">
+      <div style="font-size:1em;margin-bottom:9px;">
         Save Que Pasa App to your home screen for instant access.<br>
-        <span style="font-size:0.85em;color:#888;">This creates an app icon on your device for quick access!</span>
+        <span style="font-size:0.85em;color:#888;">Creates an app icon for quick access!</span>
       </div>
       <ul>
         <li>
@@ -207,7 +160,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    // (All your JS is unchanged)
+    // ... all your existing JS goes here ...
     // Firebase config
     var firebaseConfig = {
       apiKey: "AIzaSyDj9I6Rt64jHqA0AhhVQtHDshz5v03s3x8",
