@@ -5,7 +5,7 @@
 
 // --- FIREBASE CONFIGURATION ---
 const firebaseConfig = {
-  apiKey: "AIzaSyDj9I6RI64jHqA0AIhVQtHDshz5vO3s3x8",
+  piKey: "AIzaSyDj9I6RI64jHqA0AIhVQtHDshz5vO3s3x8",
   authDomain: "quepasaapp-8c246.firebaseapp.com",
   databaseURL: "https://quepasaapp-8c246-default-rtdb.firebaseio.com/",
   projectId: "quepasaapp-8c246",
