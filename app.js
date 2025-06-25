@@ -1,11 +1,13 @@
-// =====================
-// QuePasaApp - app.js (Enhanced)
-// Shared Firebase logic, Room join/leave helpers, Spam Protection, Activity Tracking
-// =====================
+// ================================
+// QuePasaApp - app.js
+// - DB rate limiting (anti-spam)
+// - Auto-delete empty rooms
+// - Shared Firebase helpers for UI
+// ================================
 
 // --- FIREBASE CONFIGURATION ---
 const firebaseConfig = {
-  piKey: "AIzaSyDj9I6RI64jHqA0AIhVQtHDshz5vO3s3x8",
+  apiKey: "AIzaSyDj9I6RI64jHqA0AIhVQtHDshz5vO3s3x8",
   authDomain: "quepasaapp-8c246.firebaseapp.com",
   databaseURL: "https://quepasaapp-8c246-default-rtdb.firebaseio.com/",
   projectId: "quepasaapp-8c246",
@@ -14,7 +16,7 @@ const firebaseConfig = {
   appId: "1:578912881109:web:a076538a2f57e869ced55c"
 };
 
-// Initialize Firebase (only once)
+// Initialize Firebase app (prevent double init)
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
@@ -69,6 +71,18 @@ async function joinOrCreateRoom() {
   // Remove user from room on disconnect
   db.ref(`rooms/${roomId}/users/${userId}`).onDisconnect().remove();
 
+  // --- Auto room deletion logic: If no users left, delete room ---
+  db.ref(`rooms/${roomId}/users`).on('value', async (snap) => {
+    const users = snap.val() || {};
+    if (Object.keys(users).length === 0) {
+      // Extra safety: Only delete if room still exists and is empty
+      const roomSnap = await db.ref(`rooms/${roomId}`).once('value');
+      if (roomSnap.exists()) {
+        await db.ref(`rooms/${roomId}`).remove();
+      }
+    }
+  });
+
   return { roomId, isCreator, userId };
 }
 
@@ -115,20 +129,25 @@ function listenMessages(roomId, cb) {
   });
 }
 
-// --- SPAM PROTECTION: 2 SECOND RATE LIMIT ---
-let lastMessageTimes = {}; // Tracks last message timestamp per user
+// --- SPAM PROTECTION: 2 SECOND DATABASE RATE LIMIT ---
 
 /**
- * Send a message to a room, with spam protection
+ * Send a message to a room, with database-based spam protection
  * @param {string} roomId
  * @param {string} userId
  * @param {string} text
  */
-function sendMessage(roomId, userId, text) {
+async function sendMessage(roomId, userId, text) {
   const now = Date.now();
+  const userRef = db.ref(`rooms/${roomId}/users/${userId}`);
 
-  // Limit: 1 message per 2 seconds per user
-  if (lastMessageTimes[userId] && now - lastMessageTimes[userId] < 2000) {
+  // Get last sent message timestamp from Firebase
+  const userSnap = await userRef.once('value');
+  const userData = userSnap.val() || {};
+  const lastMsg = userData.lastMsg || 0;
+
+  // Limit: 1 message per 2 seconds per user, enforced via DB
+  if (now - lastMsg < 2000) {
     alert("You're sending messages too fast. Please wait 2 seconds between messages.");
     return;
   }
@@ -141,14 +160,16 @@ function sendMessage(roomId, userId, text) {
   };
 
   // Save message as an object (keyed by messageId)
-  db.ref(`rooms/${roomId}/messages/${messageId}`).set(msg);
+  await db.ref(`rooms/${roomId}/messages/${messageId}`).set(msg);
 
-  // Update room activity and rate-limit timestamp
-  db.ref(`rooms/${roomId}/lastActive`).set(now);
-  lastMessageTimes[userId] = now;
+  // Update room activity and user's lastMsg timestamp for rate limiting
+  await Promise.all([
+    db.ref(`rooms/${roomId}/lastActive`).set(now),
+    userRef.update({ lastMsg: now })
+  ]);
 }
 
-// --- EXPOSE HELPERS FOR UI (e.g. chat.js) ---
+// --- EXPOSE HELPERS FOR UI (e.g. to be called from your HTML page) ---
 window.qpApp = {
   joinOrCreateRoom,
   listenUserCount,
