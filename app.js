@@ -115,7 +115,7 @@ function listenMessages(roomId, cb) {
   });
 }
 
-// --- SPAM PROTECTION: RATE LIMITING ---
+// --- SPAM PROTECTION: 2 SECOND RATE LIMIT ---
 let lastMessageTimes = {}; // Tracks last message timestamp per user
 
 /**
@@ -127,9 +127,9 @@ let lastMessageTimes = {}; // Tracks last message timestamp per user
 function sendMessage(roomId, userId, text) {
   const now = Date.now();
 
-  // Limit: 1 message per 5 seconds per user
-  if (lastMessageTimes[userId] && now - lastMessageTimes[userId] < 5000) {
-    alert("You're sending messages too fast. Slow down.");
+  // Limit: 1 message per 2 seconds per user
+  if (lastMessageTimes[userId] && now - lastMessageTimes[userId] < 2000) {
+    alert("You're sending messages too fast. Please wait 2 seconds between messages.");
     return;
   }
 
