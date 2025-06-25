@@ -356,7 +356,202 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <!-- QR Code JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <!-- Main app logic: Handles chat, spam protection, and auto-delete -->
-  <script src="app.js"></script>
+  <script>
+    // Firebase config
+    var firebaseConfig = {
+      apiKey: "AIzaSyDj9I6Rt64jHqA0AhhVQtHDshz5v03s3x8",
+      authDomain: "quepasaapp-8c246.firebaseapp.com",
+      projectId: "quepasaapp-8c246",
+      storageBucket: "quepasaapp-8c246.appspot.com",
+      messagingSenderId: "578912881169",
+      appId: "1:578912881169:web:a076538a2f57e069ced55c"
+    };
+    firebase.initializeApp(firebaseConfig);
+    var db = firebase.database();
+
+    function randomRoom() {
+      let arr = new Uint32Array(4);
+      window.crypto.getRandomValues(arr);
+      return Array.from(arr).map(x => x.toString(36)).join('').toUpperCase();
+    }
+    function getRoomFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('room');
+    }
+    function setRoomInUrl(room) {
+      window.history.replaceState({}, '', '?room=' + room);
+    }
+    function assignName(room) {
+      const colors = [
+        "White", "Black", "Green", "Red", "Blue", "Orange", "Purple", "Yellow", "Pink", "Brown",
+        "Cyan", "Magenta", "Teal", "Indigo", "Lime", "Violet"
+      ];
+      const key = 'colorName_' + room;
+      if (sessionStorage.getItem(key)) return sessionStorage.getItem(key);
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const name = `Mister ${color}`;
+      sessionStorage.setItem(key, name);
+      return name;
+    }
+    const colorStyles = {
+      White: "#eaeaea",
+      Black: "#222",
+      Green: "#2ecc71",
+      Red: "#e74c3c",
+      Blue: "#3498db",
+      Orange: "#e67e22",
+      Purple: "#9b59b6",
+      Yellow: "#f1c40f",
+      Pink: "#ff69b4",
+      Brown: "#a0522d",
+      Cyan: "#1abc9c",
+      Magenta: "#e040fb",
+      Teal: "#008080",
+      Indigo: "#3f51b5",
+      Lime: "#cddc39",
+      Violet: "#8e24aa"
+    };
+    let room = getRoomFromUrl() || randomRoom();
+    setRoomInUrl(room);
+    document.getElementById('roomId').textContent = room;
+    let myName = assignName(room);
+
+    function renderQR() {
+      let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
+      let qrSize = 420;
+      if (window.innerWidth < 1500) qrSize = Math.floor(window.innerWidth * 0.35);
+      if (window.innerWidth < 900) qrSize = Math.floor(window.innerWidth * 0.92);
+      if (qrSize < 80) qrSize = 80;
+      document.getElementById('qr').innerHTML = "";
+      new QRCode(document.getElementById('qr'), {
+        text: joinUrl,
+        width: qrSize,
+        height: qrSize
+      });
+    }
+    renderQR();
+    window.addEventListener('resize', renderQR);
+
+    const messagesDiv = document.getElementById('messages');
+    function addMsg(text, sender) {
+      const div = document.createElement('div');
+      div.className = 'msg' + (sender === myName ? ' mine' : '');
+      let color = null;
+      if (sender && sender.startsWith("Mister ")) {
+        color = sender.replace("Mister ", "").trim();
+      }
+      div.innerHTML = `<span class="sender" style="color:${colorStyles[color] || '#2ecc71'}">${sender}:</span> ${text}`;
+      messagesDiv.appendChild(div);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+    let msgListenerRef = db.ref('chatrooms/' + room + '/messages');
+    msgListenerRef.on('child_added', snap => {
+      const msg = snap.val();
+      addMsg(msg.text, msg.sender);
+    });
+
+    const msgInput = document.getElementById('msgInput');
+    function sendMsg() {
+      const text = msgInput.value.trim();
+      if (!text) return;
+      db.ref('chatrooms/' + room + '/messages').push({
+        text: text,
+        sender: myName
+      });
+      msgInput.value = '';
+    }
+    document.getElementById('sendBtn').onclick = sendMsg;
+    msgInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') sendMsg();
+    });
+
+    document.getElementById('newRoomBtn').onclick = function() {
+      msgListenerRef.off();
+      sessionStorage.removeItem('colorName_' + room);
+      room = randomRoom();
+      setRoomInUrl(room);
+      document.getElementById('roomId').textContent = room;
+      document.getElementById('messages').innerHTML = "";
+      renderQR();
+      msgListenerRef = db.ref('chatrooms/' + room + '/messages');
+      msgListenerRef.on('child_added', snap => {
+        const msg = snap.val();
+        addMsg(msg.text, msg.sender);
+      });
+      myName = assignName(room);
+    };
+
+    document.getElementById('clearChatBtn').onclick = function() {
+      if (confirm("Are you sure you want to clear the chat for everyone in this room? This cannot be undone.")) {
+        db.ref('chatrooms/' + room + '/messages').remove();
+        document.getElementById('messages').innerHTML = "";
+      }
+    };
+
+    // Insert room key logic
+    document.getElementById('goRoomBtn').onclick = function() {
+      var val = document.getElementById('roomKeyInput').value.trim().toUpperCase();
+      if (!val) return;
+      window.location.search = '?room=' + encodeURIComponent(val);
+    };
+    document.getElementById('roomKeyInput').addEventListener('keydown', function(e){
+      if (e.key === 'Enter') document.getElementById('goRoomBtn').click();
+    });
+
+    function setupInteractiveEnlarge(id) {
+      const el = document.getElementById(id);
+      let lastTapTime = 0;
+      el.addEventListener('click', function(e) {
+        const now = Date.now();
+        if(el.classList.contains('enlarged')) {
+          el.classList.remove('enlarged');
+          return;
+        }
+        if(now - lastTapTime < 400) {
+          el.classList.remove('enlarged');
+          lastTapTime = 0;
+        } else {
+          document.querySelectorAll('.interactive-img.enlarged').forEach(x => x.classList.remove('enlarged'));
+          el.classList.add('enlarged');
+          lastTapTime = now;
+        }
+      });
+      document.addEventListener('mousedown', function(e){
+        if(el.classList.contains('enlarged') && !el.contains(e.target)) {
+          el.classList.remove('enlarged');
+        }
+      });
+    }
+    setupInteractiveEnlarge('qr');
+    setupInteractiveEnlarge('mainLogo');
+
+    const helpIcon = document.getElementById('helpIcon');
+    const helpTooltip = document.getElementById('helpTooltip');
+    const closeTooltipBtn = document.getElementById('closeTooltipBtn');
+    function showTooltip() { helpTooltip.style.display = 'block'; }
+    function hideTooltip() { helpTooltip.style.display = 'none'; }
+    function isMobile() {
+      return window.innerWidth <= 900 || 'ontouchstart' in window;
+    }
+    helpIcon.addEventListener('mouseenter', () => { if (!isMobile()) showTooltip(); });
+    helpIcon.addEventListener('mouseleave', () => { if (!isMobile()) hideTooltip(); });
+    helpIcon.addEventListener('click', () => {
+      if (isMobile()) {
+        if (helpTooltip.style.display === 'block') {
+          hideTooltip();
+        } else {
+          showTooltip();
+        }
+      }
+    });
+    closeTooltipBtn.addEventListener('click', hideTooltip);
+    document.addEventListener('mousedown', function(e){
+      if(helpTooltip.style.display === 'block'
+        && !helpTooltip.contains(e.target)
+        && !helpIcon.contains(e.target)) {
+        hideTooltip();
+      }
+    });
+  </script>
 </body>
 </html>
