@@ -1,5 +1,5 @@
 // ================================
-// QuePasaApp - app.js
+// QuePasaApp - app.js (Improved)
 // - DB rate limiting (anti-spam)
 // - Auto-delete empty rooms
 // - Shared Firebase helpers for UI
@@ -54,6 +54,21 @@ async function joinOrCreateRoom() {
       users: {},
       messages: {}
     });
+    // Set new room in URL
+    url.searchParams.set('room', roomId);
+    window.history.replaceState({}, '', url);
+  } else {
+    // Make sure room exists, or create if not (optional: reject join if not found)
+    const roomSnap = await db.ref('rooms/' + roomId).once('value');
+    if (!roomSnap.exists()) {
+      isCreator = true;
+      await db.ref('rooms/' + roomId).set({
+        created: Date.now(),
+        lastActive: Date.now(),
+        users: {},
+        messages: {}
+      });
+    }
   }
 
   // Get or generate a unique user ID for the session
@@ -92,7 +107,7 @@ async function joinOrCreateRoom() {
  * @param {function} cb - Callback with user count
  */
 function listenUserCount(roomId, cb) {
-  db.ref(`rooms/${roomId}/users`).on('value', snap => {
+  return db.ref(`rooms/${roomId}/users`).on('value', snap => {
     const val = snap.val() || {};
     cb(Object.keys(val).length);
   });
@@ -104,7 +119,7 @@ function listenUserCount(roomId, cb) {
  * @param {function} cb - Callback if room is deleted
  */
 function listenRoomDeleted(roomId, cb) {
-  db.ref(`rooms/${roomId}`).on('value', snap => {
+  return db.ref(`rooms/${roomId}`).on('value', snap => {
     if (!snap.exists()) cb();
   });
 }
@@ -124,9 +139,18 @@ function deleteRoom(roomId) {
  * @param {function} cb - Callback with messages object
  */
 function listenMessages(roomId, cb) {
-  db.ref(`rooms/${roomId}/messages`).on('value', snap => {
+  return db.ref(`rooms/${roomId}/messages`).on('value', snap => {
     cb(snap.val() || {});
   });
+}
+
+/**
+ * Clear all messages in a room (without deleting the room).
+ * @param {string} roomId
+ * @returns {Promise}
+ */
+function clearMessages(roomId) {
+  return db.ref(`rooms/${roomId}/messages`).remove();
 }
 
 // --- SPAM PROTECTION: 2 SECOND DATABASE RATE LIMIT ---
@@ -169,6 +193,26 @@ async function sendMessage(roomId, userId, text) {
   ]);
 }
 
+// --- USER DISPLAY NAME LOGIC (OPTIONAL) ---
+/**
+ * Assign or retrieve a display name for the user in this room.
+ * Uses sessionStorage so each user has a (semi-)persistent anonymous name per room.
+ */
+function getDisplayName(roomId) {
+  const COLORS = [
+    "White", "Black", "Green", "Red", "Blue", "Orange", "Purple", "Yellow", "Pink", "Brown",
+    "Cyan", "Magenta", "Teal", "Indigo", "Lime", "Violet"
+  ];
+  const key = `qp_displayName_${roomId}`;
+  let name = sessionStorage.getItem(key);
+  if (!name) {
+    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    name = `Mister ${color}`;
+    sessionStorage.setItem(key, name);
+  }
+  return name;
+}
+
 // --- EXPOSE HELPERS FOR UI (e.g. to be called from your HTML page) ---
 window.qpApp = {
   joinOrCreateRoom,
@@ -176,5 +220,7 @@ window.qpApp = {
   listenRoomDeleted,
   deleteRoom,
   listenMessages,
-  sendMessage
+  clearMessages,
+  sendMessage,
+  getDisplayName
 };
