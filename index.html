@@ -345,6 +345,26 @@
       >
       <button id="goRoomBtn">Go to Room</button>
     </div>
+
+    <!-- NFC SHARE BUTTON just above the chat input row -->
+    <div id="nfc-share-row" style="display:flex; justify-content:center; margin-bottom:28px;">
+      <button id="nfcShareBtn"
+        style="
+          font-size: 2.2em;
+          background: #3498db;
+          color: #fff;
+          border: none;
+          border-radius: 22px;
+          padding: 18px 60px;
+          font-weight: bold;
+          cursor: pointer;
+          box-shadow: 0 2px 12px #3498db44;
+          transition: background 0.2s;
+        ">
+        📲 Tap to Share Room (NFC)
+      </button>
+    </div>
+
     <div class="msg-area" id="messages"></div>
     <div class="input-row">
       <input type="text" id="msgInput" placeholder="Type message..." autocomplete="off">
@@ -552,6 +572,24 @@
         hideTooltip();
       }
     });
+
+    // NFC Tap-to-Share Handler
+    document.getElementById('nfcShareBtn').onclick = async function() {
+      if ('NDEFWriter' in window) {
+        let writer = new NDEFWriter();
+        let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
+        try {
+          await writer.write({
+            records: [{ recordType: "url", data: joinUrl }]
+          });
+          alert('Ready! Hold your phone near another device to share the room link by NFC.');
+        } catch (err) {
+          alert('NFC failed: ' + err);
+        }
+      } else {
+        alert('NFC is not supported in this browser/device.\nTry using Chrome for Android 14+.');
+      }
+    };
   </script>
 </body>
 </html>
