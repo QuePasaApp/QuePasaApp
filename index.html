@@ -2,38 +2,612 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>The Corner - Que Pasa App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Que Pasa App</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" type="image/png" href="QuePasaLogo.png">
-  <link rel="stylesheet" href="style.css">
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f3f3f3 url('QuePasaLogo.png') repeat;
+      background-size: 320px 320px;
+      min-height: 100vh;
+    }
+    .center-box {
+      max-width: 2600px;
+      margin: 60px auto 0 auto;
+      background: #fff;
+      border-radius: 60px;
+      box-shadow: 0 16px 64px #0002;
+      padding: 80px 30px 40px 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .top-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 90px;
+      width: 100%;
+      margin-bottom: 60px;
+    }
+    .qr-col, .logo-col, .cashapp-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .qr-img, .logo-img, .cashapp-img {
+      width: 420px;
+      height: 420px;
+      object-fit: contain;
+      border-radius: 50px;
+      background: #f8f8f8;
+      border: 5px solid #eee;
+      box-shadow: 0 6px 36px #2222;
+      margin-bottom: 18px;
+      transition: box-shadow .2s, transform .2s;
+      cursor: pointer;
+      display: block;
+      background-size: cover;
+      background-position: center;
+    }
+    .cashapp-img {
+      background: #222;
+      border: 5px solid #2ecc71;
+    }
+    .img-label {
+      font-size: 2.7em;
+      color: #888;
+      text-align: center;
+      margin-top: 12px;
+    }
+    .interactive-img.enlarged {
+      position: fixed !important;
+      z-index: 1111;
+      left: 50% !important;
+      top: 50% !important;
+      transform: translate(-50%,-50%) scale(1.3) !important;
+      width: 85vw !important;
+      height: 85vw !important;
+      max-width: 98vw !important;
+      max-height: 95vh !important;
+      background: #fff;
+      box-shadow: 0 0 0 3000px #000b, 0 6px 48px #111a;
+      border: 6px solid #2ecc71;
+    }
+    .room-controls-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 12px;
+    }
+    .room-title {
+      font-size: 4.1em;
+      font-weight: 800;
+      color: #111;
+      text-align: center;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 18px;
+      justify-content: center;
+      margin-bottom: 0;
+    }
+    .room-id {
+      color: #2ecc71;
+      font-family: monospace;
+      font-size: 1.5em;
+      margin-left: 4px;
+      word-break: break-all;
+    }
+    .new-room-btn, .clear-chat-btn {
+      font-size: 2.3em;
+      background: #2ecc71;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      padding: 20px 70px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin: 0;
+    }
+    .new-room-btn:hover { background: #1e9f4d; }
+    .clear-chat-btn {
+      background: #e74c3c;
+      margin-left: 0;
+    }
+    .clear-chat-btn:hover {
+      background: #c0392b;
+    }
+    .room-key-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 32px;
+      font-size:2.3em;
+    }
+    #roomKeyInput {
+      padding: 18px 38px;
+      border-radius: 18px;
+      border: 3px solid #2ecc71;
+      font-size:1em;
+      width:340px;
+      max-width: 60vw;
+      text-align:center;
+    }
+    #goRoomBtn {
+      font-size:1em;
+      background:#2ecc71;
+      color:#fff;
+      border:none;
+      border-radius:15px;
+      padding:18px 38px;
+      font-weight:bold;
+      cursor:pointer;
+      transition: background 0.2s;
+    }
+    #goRoomBtn:hover { background: #1e9f4d; }
+    .msg-area {
+      width: 100%;
+      min-height: 500px;
+      background: #fafafa;
+      border: 4px solid #eee;
+      border-radius: 40px;
+      margin-bottom: 32px;
+      padding: 56px 24px 22px 32px;
+      overflow-y: auto;
+      font-size: 3.3em;
+      max-height: 900px;
+      word-break: break-word;
+      box-sizing: border-box;
+    }
+    .msg {
+      margin-bottom: 38px;
+      word-break: break-word;
+    }
+    .pin-msg {
+      background: #fffbe7;
+      border-left: 12px solid #f39c12;
+      padding: 22px 20px;
+      margin-bottom: 38px;
+      font-size: 1.1em;
+      border-radius: 18px;
+      box-shadow: 0 2px 8px #f39c1233;
+    }
+    .sender {
+      font-weight: bold;
+      color: #2ecc71;
+    }
+    .msg.mine .sender {
+      color: #111;
+    }
+    .input-row {
+      display: flex;
+      width: 100%;
+      gap: 32px;
+      margin-bottom: 10px;
+    }
+    #msgInput {
+      flex: 1;
+      font-size: 2.7em;
+      padding: 36px;
+      border-radius: 24px;
+      border: 4px solid #ddd;
+      outline: none;
+      background: #f7f7f7;
+    }
+    #sendBtn {
+      font-size: 2.4em;
+      padding: 32px 90px;
+      border-radius: 24px;
+      border: none;
+      background: #2ecc71;
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #sendBtn:hover { background: #1e9f4d; }
+    .help-icon {
+      position: absolute;
+      top: 32px;
+      right: 32px;
+      background: #fff;
+      border-radius: 50%;
+      width: 64px;
+      height: 64px;
+      font-size: 2.1em;
+      color: #2ecc71;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 18px #0002;
+      cursor: pointer;
+      z-index: 20;
+      border: 5px solid #2ecc71;
+      transition: background 0.18s, color 0.18s;
+    }
+    .help-icon:active,
+    .help-icon:focus,
+    .help-icon:hover { background: #2ecc71; color: #fff; outline: none;}
+    .help-tooltip {
+      position: fixed;
+      top: 120px;
+      right: 40px;
+      width: 680px;
+      max-width: 98vw;
+      background: #fff;
+      color: #222;
+      font-size: 2.1em;
+      border-radius: 30px;
+      box-shadow: 0 16px 48px #2224;
+      padding: 42px 42px 32px 42px;
+      z-index: 99;
+      display: none;
+      animation: fadeInHelp 0.24s;
+      line-height: 1.5;
+    }
+    @keyframes fadeInHelp {
+      from { opacity: 0; transform: translateY(-21px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .help-tooltip ul {
+      padding-left: 40px;
+      margin: 12px 0 0 0;
+    }
+    .close-tooltip {
+      position: absolute;
+      top: 18px;
+      right: 30px;
+      color: #e74c3c;
+      font-size: 2.1em;
+      cursor: pointer;
+      font-weight: bold;
+      transition: color .17s;
+    }
+    .close-tooltip:hover { color: #c0392b; }
+    @media (max-width: 1500px) {
+      .center-box { max-width: 98vw; }
+      .qr-img, .logo-img, .cashapp-img { width: 35vw; height: 35vw; min-width: 200px; min-height: 200px; max-width: 90vw; max-height: 90vw;}
+      .help-tooltip { width: 96vw; max-width: 97vw; font-size: 1.6em; padding: 22px 7vw 18px 7vw;}
+      .help-icon { width: 46px; height: 46px; font-size: 1.3em; top: 18px; right: 18px;}
+    }
+    @media (max-width: 900px) {
+      .top-row { flex-direction: column; gap: 40px; }
+      .qr-img, .logo-img, .cashapp-img { width: 92vw; height: 92vw; min-width: 120px; min-height: 120px; max-width: 95vw; max-height: 95vw;}
+      .help-tooltip { top: 13vw; right: 2vw; font-size: 1.1em; padding: 11vw 3vw 8vw 3vw;}
+      .help-icon { width: 36px; height: 36px; font-size: 1em; top: 4vw; right: 2vw;}
+      .center-box { padding: 3vw 1vw 2vw 1vw; border-radius: 16px;}
+      .msg-area { font-size: 1.6em; min-height: 200px; max-height: 320px; padding: 6vw 3vw 4vw 3vw; border-radius: 14px;}
+      .room-title { font-size: 2em;}
+      .img-label { font-size: 1.2em;}
+      #msgInput { font-size: 1.3em; padding: 3vw; border-radius: 10px;}
+      #sendBtn { font-size: 1.2em; padding: 3vw 5vw; border-radius: 10px;}
+      .new-room-btn, .clear-chat-btn { font-size: 1.2em; padding: 1.4vw 6vw; border-radius: 12px;}
+      .room-key-row { font-size: 1.2em;}
+      #roomKeyInput { padding: 2vw 5vw; border-radius: 8px; font-size: 1em;}
+      #goRoomBtn { padding: 2vw 5vw; border-radius: 8px;}
+    }
+    @media (max-width: 600px) {
+      .qr-img, .logo-img, .cashapp-img { min-width: 80px; min-height: 80px; }
+      .msg-area { font-size: 1em; min-height: 50px; max-height: 110px; padding: 2vw 2vw 2vw 2vw;}
+    }
+  </style>
 </head>
 <body>
-  <div class="main">
-    <img src="QuePasaLogo.png" class="logo" alt="Que Pasa App">
-    <div class="room-label">
-      The Corner: <span id="roomId" class="room-id"></span>
+  <div class="center-box">
+    <!-- Help icon and tooltip -->
+    <div class="help-icon" id="helpIcon" tabindex="0" aria-label="How to use">ℹ️</div>
+    <div class="help-tooltip" id="helpTooltip">
+      <b>How to use Que Pasa App:</b>
+      <ul>
+        <li>Share your room code or QR so friends or strangers can join.</li>
+        <li>You can chat completely anonymously—no phone number, no real name required.</li>
+        <li>Perfect for waiting rooms, classrooms, or anywhere. Just scan, chat, and walk away with no trace when you're done!</li>
+        <li>Type a message and hit "Send".</li>
+        <li>Use "New Room" to start a fresh chat.</li>
+        <li>Use "Clear Chat" to erase all messages in this room (for everyone).</li>
+        <li>Tap the Cash App image to tip/support.</li>
+        <li>Tap QR or logo to enlarge for scanning/viewing. Double tap or tap again to shrink.</li>
+      </ul>
+      <span class="close-tooltip" id="closeTooltipBtn">&times;</span>
     </div>
-    <div class="qr" id="qr"></div>
-    <div class="room-controls">
-      <input id="roomKeyInput" type="text" placeholder="Enter room key">
-      <button id="goRoomBtn">Go</button>
-      <button id="newRoomBtn">New</button>
-      <button id="clearChatBtn">Clear</button>
-      <a href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener" class="tip-btn">💸 Tip</a>
+    <div class="top-row">
+      <div class="cashapp-col">
+        <a href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener">
+          <img src="QuePasaAppCashApp.jpg" alt="Cash App" class="cashapp-img interactive-img" id="cashAppImg" />
+        </a>
+        <div class="img-label">Tip on Cash App</div>
+      </div>
+      <div class="logo-col">
+        <img src="QuePasaLogo.png" alt="Que Pasa Logo" class="logo-img interactive-img" id="mainLogo" />
+        <div class="img-label">Que Pasa App</div>
+      </div>
+      <div class="qr-col">
+        <div class="qr-img interactive-img" id="qr"></div>
+        <div class="img-label">Room QR</div>
+      </div>
     </div>
-    <div class="chat" id="messages"></div>
-    <div class="input-bar">
+    <div class="room-controls-row">
+      <div class="room-title">
+        Room: <span id="roomId" class="room-id"></span>
+      </div>
+      <button class="new-room-btn" id="newRoomBtn">New Room</button>
+      <button class="clear-chat-btn" id="clearChatBtn">Clear Chat</button>
+    </div>
+    <div class="room-key-row">
+      <input
+        id="roomKeyInput"
+        type="text"
+        placeholder="Insert room key"
+      >
+      <button id="goRoomBtn">Go to Room</button>
+    </div>
+    <!-- Pin Drop Button -->
+    <div id="pin-drop-row" style="display:flex; justify-content:center; margin-bottom:28px;">
+      <button id="pinDropBtn"
+        style="
+          font-size: 2.2em;
+          background: #f39c12;
+          color: #fff;
+          border: none;
+          border-radius: 22px;
+          padding: 18px 60px;
+          font-weight: bold;
+          cursor: pointer;
+          box-shadow: 0 2px 12px #f39c1244;
+          transition: background 0.2s;
+        ">
+        📍 Drop Pin
+      </button>
+    </div>
+    <div class="msg-area" id="messages"></div>
+    <div class="input-row">
       <input type="text" id="msgInput" placeholder="Type message..." autocomplete="off">
       <button id="sendBtn">Send</button>
-      <button id="pinDropBtn" title="Drop Pin">📍</button>
     </div>
   </div>
-
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <!-- QR Code JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    // your firebase + chat logic here
+    // Firebase config
+    var firebaseConfig = {
+      apiKey: "AIzaSyDj9I6Rt64jHqA0AhhVQtHDshz5v03s3x8",
+      authDomain: "quepasaapp-8c246.firebaseapp.com",
+      projectId: "quepasaapp-8c246",
+      storageBucket: "quepasaapp-8c246.appspot.com",
+      messagingSenderId: "578912881169",
+      appId: "1:578912881169:web:a076538a2f57e069ced55c"
+    };
+    firebase.initializeApp(firebaseConfig);
+    var db = firebase.database();
+
+    function randomRoom() {
+      let arr = new Uint32Array(4);
+      window.crypto.getRandomValues(arr);
+      return Array.from(arr).map(x => x.toString(36)).join('').toUpperCase();
+    }
+    function getRoomFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('room');
+    }
+    function setRoomInUrl(room) {
+      window.history.replaceState({}, '', '?room=' + room);
+    }
+    function assignName(room) {
+      const colors = [
+        "White", "Black", "Green", "Red", "Blue", "Orange", "Purple", "Yellow", "Pink", "Brown",
+        "Cyan", "Magenta", "Teal", "Indigo", "Lime", "Violet"
+      ];
+      const key = 'colorName_' + room;
+      if (sessionStorage.getItem(key)) return sessionStorage.getItem(key);
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const name = `Mister ${color}`;
+      sessionStorage.setItem(key, name);
+      return name;
+    }
+    const colorStyles = {
+      White: "#eaeaea",
+      Black: "#222",
+      Green: "#2ecc71",
+      Red: "#e74c3c",
+      Blue: "#3498db",
+      Orange: "#e67e22",
+      Purple: "#9b59b6",
+      Yellow: "#f1c40f",
+      Pink: "#ff69b4",
+      Brown: "#a0522d",
+      Cyan: "#1abc9c",
+      Magenta: "#e040fb",
+      Teal: "#008080",
+      Indigo: "#3f51b5",
+      Lime: "#cddc39",
+      Violet: "#8e24aa"
+    };
+    let room = getRoomFromUrl() || randomRoom();
+    setRoomInUrl(room);
+    document.getElementById('roomId').textContent = room;
+    let myName = assignName(room);
+    let myUserId = sessionStorage.getItem('qp_userId');
+    if (!myUserId) {
+      myUserId = 'u_' + Math.random().toString(36).substring(2, 10);
+      sessionStorage.setItem('qp_userId', myUserId);
+    }
+
+    function renderQR() {
+      let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
+      let qrSize = 420;
+      if (window.innerWidth < 1500) qrSize = Math.floor(window.innerWidth * 0.35);
+      if (window.innerWidth < 900) qrSize = Math.floor(window.innerWidth * 0.92);
+      if (qrSize < 80) qrSize = 80;
+      document.getElementById('qr').innerHTML = "";
+      new QRCode(document.getElementById('qr'), {
+        text: joinUrl,
+        width: qrSize,
+        height: qrSize
+      });
+    }
+    renderQR();
+    window.addEventListener('resize', renderQR);
+
+    const messagesDiv = document.getElementById('messages');
+    function addMsg(text, sender) {
+      let isPin = text.startsWith("📍 Pin dropped by ");
+      const div = document.createElement('div');
+      div.className = (isPin ? 'pin-msg ' : '') + 'msg' + (sender === myName ? ' mine' : '');
+      let color = null;
+      if (sender && sender.startsWith("Mister ")) {
+        color = sender.replace("Mister ", "").trim();
+      }
+      div.innerHTML = `<span class="sender" style="color:${colorStyles[color] || '#2ecc71'}">${sender}:</span> ${text}`;
+      messagesDiv.appendChild(div);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+    let msgListenerRef = db.ref('chatrooms/' + room + '/messages');
+    msgListenerRef.on('child_added', snap => {
+      const msg = snap.val();
+      addMsg(msg.text, msg.sender);
+    });
+
+    const msgInput = document.getElementById('msgInput');
+    function sendMsg() {
+      const text = msgInput.value.trim();
+      if (!text) return;
+      db.ref('chatrooms/' + room + '/messages').push({
+        text: text,
+        sender: myName
+      });
+      msgInput.value = '';
+    }
+    document.getElementById('sendBtn').onclick = sendMsg;
+    msgInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') sendMsg();
+    });
+
+    document.getElementById('newRoomBtn').onclick = function() {
+      msgListenerRef.off();
+      sessionStorage.removeItem('colorName_' + room);
+      room = randomRoom();
+      setRoomInUrl(room);
+      document.getElementById('roomId').textContent = room;
+      document.getElementById('messages').innerHTML = "";
+      renderQR();
+      msgListenerRef = db.ref('chatrooms/' + room + '/messages');
+      msgListenerRef.on('child_added', snap => {
+        const msg = snap.val();
+        addMsg(msg.text, msg.sender);
+      });
+      myName = assignName(room);
+    };
+
+    document.getElementById('clearChatBtn').onclick = function() {
+      if (confirm("Are you sure you want to clear the chat for everyone in this room? This cannot be undone.")) {
+        db.ref('chatrooms/' + room + '/messages').remove();
+        document.getElementById('messages').innerHTML = "";
+      }
+    };
+
+    // Insert room key logic
+    document.getElementById('goRoomBtn').onclick = function() {
+      var val = document.getElementById('roomKeyInput').value.trim().toUpperCase();
+      if (!val) return;
+      window.location.search = '?room=' + encodeURIComponent(val);
+    };
+    document.getElementById('roomKeyInput').addEventListener('keydown', function(e){
+      if (e.key === 'Enter') document.getElementById('goRoomBtn').click();
+    });
+
+    function setupInteractiveEnlarge(id) {
+      const el = document.getElementById(id);
+      let lastTapTime = 0;
+      el.addEventListener('click', function(e) {
+        const now = Date.now();
+        if(el.classList.contains('enlarged')) {
+          el.classList.remove('enlarged');
+          return;
+        }
+        if(now - lastTapTime < 400) {
+          el.classList.remove('enlarged');
+          lastTapTime = 0;
+        } else {
+          document.querySelectorAll('.interactive-img.enlarged').forEach(x => x.classList.remove('enlarged'));
+          el.classList.add('enlarged');
+          lastTapTime = now;
+        }
+      });
+      document.addEventListener('mousedown', function(e){
+        if(el.classList.contains('enlarged') && !el.contains(e.target)) {
+          el.classList.remove('enlarged');
+        }
+      });
+    }
+    setupInteractiveEnlarge('qr');
+    setupInteractiveEnlarge('mainLogo');
+
+    const helpIcon = document.getElementById('helpIcon');
+    const helpTooltip = document.getElementById('helpTooltip');
+    const closeTooltipBtn = document.getElementById('closeTooltipBtn');
+    function showTooltip() { helpTooltip.style.display = 'block'; }
+    function hideTooltip() { helpTooltip.style.display = 'none'; }
+    function isMobile() {
+      return window.innerWidth <= 900 || 'ontouchstart' in window;
+    }
+    helpIcon.addEventListener('mouseenter', () => { if (!isMobile()) showTooltip(); });
+    helpIcon.addEventListener('mouseleave', () => { if (!isMobile()) hideTooltip(); });
+    helpIcon.addEventListener('click', () => {
+      if (isMobile()) {
+        if (helpTooltip.style.display === 'block') {
+          hideTooltip();
+        } else {
+          showTooltip();
+        }
+      }
+    });
+    closeTooltipBtn.addEventListener('click', hideTooltip);
+    document.addEventListener('mousedown', function(e){
+      if(helpTooltip.style.display === 'block'
+        && !helpTooltip.contains(e.target)
+        && !helpIcon.contains(e.target)) {
+        hideTooltip();
+      }
+    });
+
+    // Drop Pin with GPS
+    document.getElementById('pinDropBtn').onclick = function() {
+      if (!navigator.geolocation) {
+        db.ref('chatrooms/' + room + '/messages').push({
+          text: `📍 Pin dropped by ${myName} (location unavailable)`,
+          sender: myName
+        });
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const lat = position.coords.latitude.toFixed(5);
+        const lng = position.coords.longitude.toFixed(5);
+        const pinMsg = `📍 Pin dropped by ${myName} at <a href="https://maps.google.com/?q=${lat},${lng}" target="_blank">[${lat}, ${lng}]</a>`;
+        db.ref('chatrooms/' + room + '/messages').push({
+          text: pinMsg,
+          sender: myName
+        });
+      }, function() {
+        db.ref('chatrooms/' + room + '/messages').push({
+          text: `📍 Pin dropped by ${myName} (location unavailable)`,
+          sender: myName
+        });
+      });
+    };
   </script>
 </body>
 </html>
