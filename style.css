@@ -189,3 +189,17 @@ body.chat-page {
   letter-spacing: 16px;
   transition: opacity 0.25s;
 }
+
+/* ---- MAKE CHAT BIGGER ON MOBILE! ---- */
+@media (max-width: 600px) {
+  .chat-area {
+    min-height: 65vh;
+    height: 75vh;
+    max-height: 85vh;
+    font-size: 1.2em;
+    padding: 4vw 2vw 4vw 2vw;
+  }
+  .input-bar {
+    max-width: 98vw;
+  }
+}
