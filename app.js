@@ -3,6 +3,7 @@
 // - DB rate limiting (anti-spam)
 // - Auto-delete empty rooms
 // - Shared Firebase helpers for UI
+// - Drop Pin with GPS location
 // ================================
 
 // --- FIREBASE CONFIGURATION ---
@@ -213,6 +214,27 @@ function getDisplayName(roomId) {
   return name;
 }
 
+/**
+ * Drop a pin with GPS location into the chat room.
+ * @param {string} roomId
+ * @param {string} userId
+ * @param {string} userName
+ */
+function dropPin(roomId, userId, userName) {
+  if (!navigator.geolocation) {
+    sendMessage(roomId, userId, `📍 Pin dropped by ${userName} (location unavailable)`);
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(function(position) {
+    const lat = position.coords.latitude.toFixed(5);
+    const lng = position.coords.longitude.toFixed(5);
+    const pinMsg = `📍 Pin dropped by ${userName} at <a href="https://maps.google.com/?q=${lat},${lng}" target="_blank">[${lat}, ${lng}]</a>`;
+    sendMessage(roomId, userId, pinMsg);
+  }, function() {
+    sendMessage(roomId, userId, `📍 Pin dropped by ${userName} (location unavailable)`);
+  });
+}
+
 // --- EXPOSE HELPERS FOR UI (e.g. to be called from your HTML page) ---
 window.qpApp = {
   joinOrCreateRoom,
@@ -222,5 +244,6 @@ window.qpApp = {
   listenMessages,
   clearMessages,
   sendMessage,
-  getDisplayName
+  getDisplayName,
+  dropPin
 };
