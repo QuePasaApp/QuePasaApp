@@ -2,236 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Que Pasa App</title>
+  <title>The Corner - Que Pasa App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/png" href="QuePasaLogo.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="center-box">
-    <!-- Logo at the top -->
-    <div class="logo-col">
-      <img src="QuePasaLogo.png" alt="Que Pasa App Logo" class="logo-img" />
-      <div class="img-label">Que Pasa App</div>
+  <div class="main">
+    <img src="QuePasaLogo.png" class="logo" alt="Que Pasa App">
+    <div class="room-label">
+      The Corner: <span id="roomId" class="room-id"></span>
     </div>
-
-    <!-- Tip Button -->
-    <a href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener" class="tip-btn">
-      💸 Tip on Cash App
-    </a>
-
-    <!-- Room Info -->
-    <div class="room-controls-row">
-      <div class="room-title">
-        The Corner: <span id="roomId" class="room-id"></span>
-      </div>
-      <button class="new-room-btn" id="newRoomBtn">New</button>
-      <button class="clear-chat-btn" id="clearChatBtn">Clear Chat</button>
+    <div class="qr" id="qr"></div>
+    <div class="room-controls">
+      <input id="roomKeyInput" type="text" placeholder="Enter room key">
+      <button id="goRoomBtn">Go</button>
+      <button id="newRoomBtn">New</button>
+      <button id="clearChatBtn">Clear</button>
+      <a href="https://cash.app/$QuePasaApp" target="_blank" rel="noopener" class="tip-btn">💸 Tip</a>
     </div>
-    <div class="room-key-row">
-      <input id="roomKeyInput" type="text" placeholder="Insert room key">
-      <button id="goRoomBtn">Go to Room</button>
-    </div>
-
-    <!-- QR code for sharing -->
-    <div class="qr-col">
-      <div class="qr-img interactive-img" id="qr"></div>
-      <div class="img-label">Room QR</div>
-    </div>
-
-    <!-- Pin Drop Button -->
-    <div id="pin-drop-row">
-      <button id="pinDropBtn" class="pin-btn">
-        📍 Drop Pin
-      </button>
-    </div>
-
-    <!-- Chat area -->
-    <div class="msg-area" id="messages"></div>
-    <div class="input-row">
+    <div class="chat" id="messages"></div>
+    <div class="input-bar">
       <input type="text" id="msgInput" placeholder="Type message..." autocomplete="off">
       <button id="sendBtn">Send</button>
+      <button id="pinDropBtn" title="Drop Pin">📍</button>
     </div>
   </div>
 
-  <!-- Firebase -->
+  <!-- Firebase (unchanged, keep your existing config) -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <!-- QR Code JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    // Firebase config
-    var firebaseConfig = {
-      apiKey: "AIzaSyDj9I6Rt64jHqA0AhhVQtHDshz5v03s3x8",
-      authDomain: "quepasaapp-8c246.firebaseapp.com",
-      projectId: "quepasaapp-8c246",
-      storageBucket: "quepasaapp-8c246.appspot.com",
-      messagingSenderId: "578912881169",
-      appId: "1:578912881169:web:a076538a2f57e069ced55c"
-    };
-    firebase.initializeApp(firebaseConfig);
-    var db = firebase.database();
-
-    // Room and user setup
-    function randomRoom() {
-      let arr = new Uint32Array(4);
-      window.crypto.getRandomValues(arr);
-      return Array.from(arr).map(x => x.toString(36)).join('').toUpperCase();
-    }
-    function getRoomFromUrl() {
-      const params = new URLSearchParams(window.location.search);
-      return params.get('room');
-    }
-    function setRoomInUrl(room) {
-      window.history.replaceState({}, '', '?room=' + room);
-    }
-    function assignName(room) {
-      const colors = [
-        "White", "Black", "Green", "Red", "Blue", "Orange", "Purple", "Yellow", "Pink", "Brown",
-        "Cyan", "Magenta", "Teal", "Indigo", "Lime", "Violet"
-      ];
-      const key = 'colorName_' + room;
-      if (sessionStorage.getItem(key)) return sessionStorage.getItem(key);
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      const name = `Mister ${color}`;
-      sessionStorage.setItem(key, name);
-      return name;
-    }
-    const colorStyles = {
-      White: "#eaeaea",
-      Black: "#222",
-      Green: "#2ecc71",
-      Red: "#e74c3c",
-      Blue: "#3498db",
-      Orange: "#e67e22",
-      Purple: "#9b59b6",
-      Yellow: "#f1c40f",
-      Pink: "#ff69b4",
-      Brown: "#a0522d",
-      Cyan: "#1abc9c",
-      Magenta: "#e040fb",
-      Teal: "#008080",
-      Indigo: "#3f51b5",
-      Lime: "#cddc39",
-      Violet: "#8e24aa"
-    };
-    let room = getRoomFromUrl() || randomRoom();
-    setRoomInUrl(room);
-    document.getElementById('roomId').textContent = room;
-    let myName = assignName(room);
-    let myUserId = sessionStorage.getItem('qp_userId');
-    if (!myUserId) {
-      myUserId = 'u_' + Math.random().toString(36).substring(2, 10);
-      sessionStorage.setItem('qp_userId', myUserId);
-    }
-
-    // QR code
-    function renderQR() {
-      let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
-      let qrSize = 220;
-      if (window.innerWidth < 900) qrSize = Math.floor(window.innerWidth * 0.7);
-      if (qrSize < 80) qrSize = 80;
-      document.getElementById('qr').innerHTML = "";
-      new QRCode(document.getElementById('qr'), {
-        text: joinUrl,
-        width: qrSize,
-        height: qrSize
-      });
-    }
-    renderQR();
-    window.addEventListener('resize', renderQR);
-
-    // Chat logic
-    const messagesDiv = document.getElementById('messages');
-    function addMsg(text, sender) {
-      let isPin = text.startsWith("📍 Pin dropped by ");
-      const div = document.createElement('div');
-      div.className = (isPin ? 'pin-msg ' : '') + 'msg' + (sender === myName ? ' mine' : '');
-      let color = null;
-      if (sender && sender.startsWith("Mister ")) {
-        color = sender.replace("Mister ", "").trim();
-      }
-      div.innerHTML = `<span class="sender" style="color:${colorStyles[color] || '#2ecc71'}">${sender}:</span> ${text}`;
-      messagesDiv.appendChild(div);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-    let msgListenerRef = db.ref('chatrooms/' + room + '/messages');
-    msgListenerRef.on('child_added', snap => {
-      const msg = snap.val();
-      addMsg(msg.text, msg.sender);
-    });
-
-    const msgInput = document.getElementById('msgInput');
-    function sendMsg() {
-      const text = msgInput.value.trim();
-      if (!text) return;
-      db.ref('chatrooms/' + room + '/messages').push({
-        text: text,
-        sender: myName
-      });
-      msgInput.value = '';
-    }
-    document.getElementById('sendBtn').onclick = sendMsg;
-    msgInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') sendMsg();
-    });
-
-    document.getElementById('newRoomBtn').onclick = function() {
-      msgListenerRef.off();
-      sessionStorage.removeItem('colorName_' + room);
-      room = randomRoom();
-      setRoomInUrl(room);
-      document.getElementById('roomId').textContent = room;
-      document.getElementById('messages').innerHTML = "";
-      renderQR();
-      msgListenerRef = db.ref('chatrooms/' + room + '/messages');
-      msgListenerRef.on('child_added', snap => {
-        const msg = snap.val();
-        addMsg(msg.text, msg.sender);
-      });
-      myName = assignName(room);
-    };
-
-    document.getElementById('clearChatBtn').onclick = function() {
-      if (confirm("Are you sure you want to clear the chat for everyone in this room? This cannot be undone.")) {
-        db.ref('chatrooms/' + room + '/messages').remove();
-        document.getElementById('messages').innerHTML = "";
-      }
-    };
-
-    document.getElementById('goRoomBtn').onclick = function() {
-      var val = document.getElementById('roomKeyInput').value.trim().toUpperCase();
-      if (!val) return;
-      window.location.search = '?room=' + encodeURIComponent(val);
-    };
-    document.getElementById('roomKeyInput').addEventListener('keydown', function(e){
-      if (e.key === 'Enter') document.getElementById('goRoomBtn').click();
-    });
-
-    // Drop Pin with GPS
-    document.getElementById('pinDropBtn').onclick = function() {
-      if (!navigator.geolocation) {
-        db.ref('chatrooms/' + room + '/messages').push({
-          text: `📍 Pin dropped by ${myName} (location unavailable)`,
-          sender: myName
-        });
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(function(position) {
-        const lat = position.coords.latitude.toFixed(5);
-        const lng = position.coords.longitude.toFixed(5);
-        const pinMsg = `📍 Pin dropped by ${myName} at <a href="https://maps.google.com/?q=${lat},${lng}" target="_blank">[${lat}, ${lng}]</a>`;
-        db.ref('chatrooms/' + room + '/messages').push({
-          text: pinMsg,
-          sender: myName
-        });
-      }, function() {
-        db.ref('chatrooms/' + room + '/messages').push({
-          text: `📍 Pin dropped by ${myName} (location unavailable)`,
-          sender: myName
-        });
-      });
-    };
+    // ... Use your existing JS logic for joining rooms, chat, etc. ...
+    // (Use the code we worked on above for joining room, messages, pin, etc)
   </script>
 </body>
 </html>
