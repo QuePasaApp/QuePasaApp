@@ -175,6 +175,15 @@
       margin-bottom: 38px;
       word-break: break-word;
     }
+    .pin-msg {
+      background: #fffbe7;
+      border-left: 12px solid #f39c12;
+      padding: 22px 20px;
+      margin-bottom: 38px;
+      font-size: 1.1em;
+      border-radius: 18px;
+      box-shadow: 0 2px 8px #f39c1233;
+    }
     .sender {
       font-weight: bold;
       color: #2ecc71;
@@ -292,16 +301,6 @@
       .qr-img, .logo-img, .cashapp-img { min-width: 80px; min-height: 80px; }
       .msg-area { font-size: 1em; min-height: 50px; max-height: 110px; padding: 2vw 2vw 2vw 2vw;}
     }
-    /* Pin message highlight */
-    .pin-msg {
-      background: #fffbe7;
-      border-left: 12px solid #f39c12;
-      padding: 22px 20px;
-      margin-bottom: 38px;
-      font-size: 1.1em;
-      border-radius: 18px;
-      box-shadow: 0 2px 8px #f39c1233;
-    }
   </style>
 </head>
 <body>
@@ -353,8 +352,7 @@
       >
       <button id="goRoomBtn">Go to Room</button>
     </div>
-
-    <!-- PIN DROP BUTTON just above the chat input row -->
+    <!-- Pin Drop Button -->
     <div id="pin-drop-row" style="display:flex; justify-content:center; margin-bottom:28px;">
       <button id="pinDropBtn"
         style="
@@ -372,7 +370,6 @@
         📍 Drop Pin
       </button>
     </div>
-
     <div class="msg-area" id="messages"></div>
     <div class="input-row">
       <input type="text" id="msgInput" placeholder="Type message..." autocomplete="off">
@@ -443,6 +440,11 @@
     setRoomInUrl(room);
     document.getElementById('roomId').textContent = room;
     let myName = assignName(room);
+    let myUserId = sessionStorage.getItem('qp_userId');
+    if (!myUserId) {
+      myUserId = 'u_' + Math.random().toString(36).substring(2, 10);
+      sessionStorage.setItem('qp_userId', myUserId);
+    }
 
     function renderQR() {
       let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
@@ -462,7 +464,6 @@
 
     const messagesDiv = document.getElementById('messages');
     function addMsg(text, sender) {
-      // Highlight pin messages
       let isPin = text.startsWith("📍 Pin dropped by ");
       const div = document.createElement('div');
       div.className = (isPin ? 'pin-msg ' : '') + 'msg' + (sender === myName ? ' mine' : '');
@@ -583,12 +584,28 @@
       }
     });
 
-    // PIN DROP BUTTON HANDLER
+    // Drop Pin with GPS
     document.getElementById('pinDropBtn').onclick = function() {
-      const pinMsg = "📍 Pin dropped by " + myName;
-      db.ref('chatrooms/' + room + '/messages').push({
-        text: pinMsg,
-        sender: myName
+      if (!navigator.geolocation) {
+        db.ref('chatrooms/' + room + '/messages').push({
+          text: `📍 Pin dropped by ${myName} (location unavailable)`,
+          sender: myName
+        });
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const lat = position.coords.latitude.toFixed(5);
+        const lng = position.coords.longitude.toFixed(5);
+        const pinMsg = `📍 Pin dropped by ${myName} at <a href="https://maps.google.com/?q=${lat},${lng}" target="_blank">[${lat}, ${lng}]</a>`;
+        db.ref('chatrooms/' + room + '/messages').push({
+          text: pinMsg,
+          sender: myName
+        });
+      }, function() {
+        db.ref('chatrooms/' + room + '/messages').push({
+          text: `📍 Pin dropped by ${myName} (location unavailable)`,
+          sender: myName
+        });
       });
     };
   </script>
