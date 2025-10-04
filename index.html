@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Que Pasa App</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <!-- Favicon for browser tab -->
   <link rel="icon" type="image/png" href="QuePasaLogo.png">
   <style>
     html, body {
@@ -81,7 +80,6 @@
       box-shadow: 0 0 0 3000px #000b, 0 6px 48px #111a;
       border: 6px solid #2ecc71;
     }
-    /* Room controls alignment */
     .room-controls-row {
       display: flex;
       flex-direction: row;
@@ -294,6 +292,16 @@
       .qr-img, .logo-img, .cashapp-img { min-width: 80px; min-height: 80px; }
       .msg-area { font-size: 1em; min-height: 50px; max-height: 110px; padding: 2vw 2vw 2vw 2vw;}
     }
+    /* Pin message highlight */
+    .pin-msg {
+      background: #fffbe7;
+      border-left: 12px solid #f39c12;
+      padding: 22px 20px;
+      margin-bottom: 38px;
+      font-size: 1.1em;
+      border-radius: 18px;
+      box-shadow: 0 2px 8px #f39c1233;
+    }
   </style>
 </head>
 <body>
@@ -346,22 +354,22 @@
       <button id="goRoomBtn">Go to Room</button>
     </div>
 
-    <!-- NFC SHARE BUTTON just above the chat input row -->
-    <div id="nfc-share-row" style="display:flex; justify-content:center; margin-bottom:28px;">
-      <button id="nfcShareBtn"
+    <!-- PIN DROP BUTTON just above the chat input row -->
+    <div id="pin-drop-row" style="display:flex; justify-content:center; margin-bottom:28px;">
+      <button id="pinDropBtn"
         style="
           font-size: 2.2em;
-          background: #3498db;
+          background: #f39c12;
           color: #fff;
           border: none;
           border-radius: 22px;
           padding: 18px 60px;
           font-weight: bold;
           cursor: pointer;
-          box-shadow: 0 2px 12px #3498db44;
+          box-shadow: 0 2px 12px #f39c1244;
           transition: background 0.2s;
         ">
-        📲 Tap to Share Room (NFC)
+        📍 Drop Pin
       </button>
     </div>
 
@@ -454,8 +462,10 @@
 
     const messagesDiv = document.getElementById('messages');
     function addMsg(text, sender) {
+      // Highlight pin messages
+      let isPin = text.startsWith("📍 Pin dropped by ");
       const div = document.createElement('div');
-      div.className = 'msg' + (sender === myName ? ' mine' : '');
+      div.className = (isPin ? 'pin-msg ' : '') + 'msg' + (sender === myName ? ' mine' : '');
       let color = null;
       if (sender && sender.startsWith("Mister ")) {
         color = sender.replace("Mister ", "").trim();
@@ -573,22 +583,13 @@
       }
     });
 
-    // NFC Tap-to-Share Handler
-    document.getElementById('nfcShareBtn').onclick = async function() {
-      if ('NDEFWriter' in window) {
-        let writer = new NDEFWriter();
-        let joinUrl = window.location.origin + window.location.pathname + '?room=' + room;
-        try {
-          await writer.write({
-            records: [{ recordType: "url", data: joinUrl }]
-          });
-          alert('Ready! Hold your phone near another device to share the room link by NFC.');
-        } catch (err) {
-          alert('NFC failed: ' + err);
-        }
-      } else {
-        alert('NFC is not supported in this browser/device.\nTry using Chrome for Android 14+.');
-      }
+    // PIN DROP BUTTON HANDLER
+    document.getElementById('pinDropBtn').onclick = function() {
+      const pinMsg = "📍 Pin dropped by " + myName;
+      db.ref('chatrooms/' + room + '/messages').push({
+        text: pinMsg,
+        sender: myName
+      });
     };
   </script>
 </body>
